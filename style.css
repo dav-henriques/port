@@ -1,23 +1,3 @@
-/* =============================================================================
-   davi — visual artist
-   A paper collage rebuilt as a real interface.
-
-   0. Fonts
-   1. Tokens
-   2. Reset & base
-   3. Stage — the collage canvas
-   4. Piece — position / idle motion / entrance
-   5. Cut-paper lettering
-   6. Hero components
-   7. Board components
-   8. Backdrop — the cutting mat
-   9. Chrome (grain, cursor, footer)
-  10. Responsive
-  11. Reduced motion / print
-============================================================================= */
-
-/* ----------------------------------------------------------- 0. Fonts */
-/* Self-hosted woff2, latin subset. No external requests.               */
 @font-face {
   font-family: "Archivo Black";
   src: url("fonts/archivo-black-400.woff2") format("woff2");
@@ -106,10 +86,12 @@
   font-display: swap;
 }
 
-/* -------------------------------------------------------------- 1. Tokens */
 :root {
+
+  --mat: #23372e;
+  --mat-ink: #b0d6c5;
+
   --black: #000000;
-  --void: #0e1613;
   --ink: #101010;
   --paper: #f3f1ec;
   --cream: #ece4d4;
@@ -134,10 +116,8 @@
   --ease-out: cubic-bezier(.16, .84, .34, 1);
   --ease-soft: cubic-bezier(.4, .05, .2, 1);
 
-  /* Fibre of the paper chips — one SVG, reused everywhere. */
   --grain-url: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)'/%3E%3C/svg%3E");
 
-  /* Type scale — cqw on the collage, rem once it reflows (see §9). */
   --fs-note: 0.78cqw;
   --fs-eyebrow: 0.80cqw;
   --fs-lead: 1.72cqw;
@@ -149,7 +129,6 @@
   --fs-watch-b: 1.00cqw;
 }
 
-/* ------------------------------------------------------- 2. Reset & base */
 *,
 *::before,
 *::after {
@@ -159,7 +138,7 @@
 html {
   background: var(--void);
   overflow-x: clip;
-  /* rotated scraps may bleed a few px */
+
   scroll-behavior: smooth;
   -webkit-text-size-adjust: 100%;
 }
@@ -220,17 +199,13 @@ a {
   inset-block-start: 1rem;
 }
 
-/* --------------------------------------------------------- 3. The stage */
-/*  Every piece is placed as a percentage of the stage, so the whole
-    composition scales as one object. `container-type: size` lets the
-    typography inside scale with it too, via cqw.                        */
 .stage {
   position: relative;
   container-type: size;
   width: 100%;
   margin-inline: auto;
   overflow: clip;
-  /* pieces may bleed past the right edge */
+
 }
 
 .hero {
@@ -242,18 +217,13 @@ a {
 .stage--hero {
   aspect-ratio: 1438 / 1023;
   width: min(100%, 140.5svh);
-  /* letterbox: never taller than the viewport */
+
 }
 
 .stage--board {
   aspect-ratio: 1438 / 2049;
 }
 
-/* ------------------------------------------------- 4. Piece: the scraps */
-/*  Three nested layers so transforms never fight:
-      .piece        — placement + pointer parallax  (JS writes --px/--py)
-      .piece__float — perpetual idle drift          (CSS animation)
-      .piece__art   — resting angle + hover response (CSS transition)     */
 .piece {
   position: absolute;
   left: var(--x);
@@ -288,9 +258,7 @@ a {
   transform:
     rotate(calc(var(--rot, 0deg) * var(--straighten, 1))) scale(var(--scale, 1)) translateY(var(--lift, 0));
   transform-origin: 50% 50%;
-  /* Contact shadow + ambient: the wall is lit now, so paper has to cast
-     something or it reads as a sticker. Applied here rather than on the
-     animated layers so the filter result stays cached.                  */
+
   filter:
     drop-shadow(0 .32cqw .45cqw rgba(0, 0, 0, .48))
     drop-shadow(0 1.5cqw 2.2cqw rgba(0, 0, 0, .34));
@@ -307,7 +275,6 @@ a {
   transform: scaleX(-1);
 }
 
-/* Interactive scraps lift off the board and straighten out. */
 .piece--card:is(:hover, :focus-within) .piece__art,
 .piece--polaroid:hover .piece__art {
   --straighten: .28;
@@ -320,10 +287,6 @@ a {
   animation-play-state: paused;
 }
 
-/* ------------------------------------------------- 5. Animated wordmark */
-/*  The two ransom-note lines are animated WebP (converted from the source
-    GIFs). A <picture> swaps in a single still frame when the viewer has
-    asked for reduced motion — the one thing CSS cannot pause.            */
 .wordmark,
 .tagline {
   line-height: 0;
@@ -335,7 +298,6 @@ a {
   height: auto;
 }
 
-/* --------------------------------------------------- 6. Hero components */
 .polaroid {
   position: relative;
   margin: 0;
@@ -385,7 +347,6 @@ a {
   filter: drop-shadow(0 0 1.2cqw rgba(255, 255, 255, .35));
 }
 
-/* -------------------------------------------------- 7. Board components */
 .board {
   padding-block-end: clamp(2rem, 5vw, 5rem);
 }
@@ -397,7 +358,6 @@ a {
   text-transform: uppercase;
 }
 
-/* post-it ------------------------------------------------------------- */
 .note {
   position: relative;
 }
@@ -420,7 +380,6 @@ a {
   transform: rotate(-1.2deg);
 }
 
-/* punched sheet ------------------------------------------------------- */
 .sheet {
   position: relative;
 }
@@ -488,7 +447,6 @@ a {
   }
 }
 
-/* watch --------------------------------------------------------------- */
 .watch {
   position: relative;
 }
@@ -544,7 +502,6 @@ a {
   color: #b93ff5;
 }
 
-/* cards --------------------------------------------------------------- */
 .piece--card {
   cursor: pointer;
 }
@@ -561,8 +518,6 @@ a {
   pointer-events: none;
 }
 
-/* Each scrap has its own usable area — the tape, the clip and the tear all
-   eat into it, so the text box is placed per card rather than globally.   */
 .card__body {
   position: absolute;
   left: var(--bx, 19%);
@@ -706,7 +661,6 @@ a {
   transition: opacity .5s var(--ease-out) .05s, transform .5s var(--ease-out) .05s, visibility 0s;
 }
 
-/* contact ------------------------------------------------------------- */
 .piece--contact {
   cursor: default;
 }
@@ -760,22 +714,31 @@ a {
   scale: 1 1;
 }
 
-/* ---------------------------------------------------------- 8. Backdrop */
-/*  A self-healing cutting mat — the surface this collage was actually made
-    on. Everything here is flat and still on purpose: the paper floats, the
-    mat does not. Layers, bottom up:
-      .mat            — the PVC itself, lit from above
-      .mat__grid      — 1-unit minor grid, 5-unit major
-      .mat__angles    — the 30° / 45° / 60° guides, corners only
-      .mat__ruler     — numbered scales down the top and left edges
-      .mat__edge      — bevel and vignette                                */
 :root {
   --minor: 28px;
-  /* one grid unit  */
+
   --major: 140px;
-  /* five units     */
-  --mat-line: 176, 214, 197;
-  /* printed ink    */
+
+  --mat-lit: color-mix(in oklab, var(--mat), #fff 5%);
+  --mat-mid: color-mix(in oklab, var(--mat), #000 5%);
+  --mat-low: color-mix(in oklab, var(--mat), #000 15%);
+  --mat-deep: color-mix(in oklab, var(--mat), #000 51%);
+
+  --ink-major: color-mix(in srgb, var(--mat-ink) 30%, transparent);
+  --ink-minor: color-mix(in srgb, var(--mat-ink) 13%, transparent);
+  --ink-45: color-mix(in srgb, var(--mat-ink) 14%, transparent);
+  --ink-30: color-mix(in srgb, var(--mat-ink) 9%, transparent);
+  --ink-tick: color-mix(in srgb, var(--mat-ink) 52%, transparent);
+  --ink-tick-sm: color-mix(in srgb, var(--mat-ink) 30%, transparent);
+  --ink-num: color-mix(in srgb, var(--mat-ink) 48%, transparent);
+  --ink-mark: color-mix(in srgb, var(--mat-ink) 26%, transparent);
+  --ink-hair: color-mix(in srgb, var(--mat-ink) 7%, transparent);
+
+  --shade-ruler: color-mix(in srgb, var(--mat-deep) 32%, transparent);
+  --shade-edge: color-mix(in srgb, var(--mat-deep) 34%, transparent);
+  --shade-corner: color-mix(in srgb, var(--mat-deep) 62%, transparent);
+
+  --void: color-mix(in oklab, var(--mat), #000 38%);
 }
 
 .mat {
@@ -786,43 +749,32 @@ a {
   pointer-events: none;
   background:
     radial-gradient(125% 95% at 50% -12%,
-      #2b4137 0%,
-      #223328 40%,
-      #1b2a23 72%,
+      var(--mat-lit) 0%,
+      var(--mat-mid) 40%,
+      var(--mat-low) 72%,
       var(--void) 100%);
 }
 
-/* Everything else lives on top of the mat. */
 main,
 .footer {
   position: relative;
   z-index: 1;
 }
 
-/*  Everything PRINTED on the mat — grid, angles, rulers, the spec in the
-    corner — lives in here, so it all leans together when the pointer moves.
-    Only the lighting (.mat__edge) stays nailed to the viewport.
-
-    The box overshoots the viewport by exactly one major square on every
-    side. Two reasons: the lean can never drag an edge into view, and one
-    major is a whole pattern period, so every repeat still lands where it
-    would have with inset: 0. Anything anchored to a viewport edge adds
-    var(--major) back.                                                     */
 .mat__surface {
   position: absolute;
   inset: calc(var(--major) * -1);
   transform: translate3d(var(--sx, 0px), var(--sy, 0px), 0);
 }
 
-/* grid ---------------------------------------------------------------- */
 .mat__grid {
   position: absolute;
   inset: 0;
   background-image:
-    linear-gradient(to right, rgba(var(--mat-line), .30) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(var(--mat-line), .30) 1px, transparent 1px),
-    linear-gradient(to right, rgba(var(--mat-line), .125) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(var(--mat-line), .125) 1px, transparent 1px);
+    linear-gradient(to right, var(--ink-major) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--ink-major) 1px, transparent 1px),
+    linear-gradient(to right, var(--ink-minor) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--ink-minor) 1px, transparent 1px);
   background-size:
     var(--major) var(--major),
     var(--major) var(--major),
@@ -830,29 +782,22 @@ main,
     var(--minor) var(--minor);
 }
 
-/* angle guides -------------------------------------------------------- */
-/*  Real mats print these in the corners, not across the middle. The mask
-    keeps them out of the way of the collage.                             */
 .mat__angles {
   position: absolute;
   inset: 0;
   background-image:
     repeating-linear-gradient(45deg,
-      rgba(var(--mat-line), .14) 0 1px, transparent 1px var(--major)),
+      var(--ink-45) 0 1px, transparent 1px var(--major)),
     repeating-linear-gradient(-45deg,
-      rgba(var(--mat-line), .14) 0 1px, transparent 1px var(--major)),
+      var(--ink-45) 0 1px, transparent 1px var(--major)),
     repeating-linear-gradient(30deg,
-      rgba(var(--mat-line), .09) 0 1px, transparent 1px calc(var(--major) * 1.5)),
+      var(--ink-30) 0 1px, transparent 1px calc(var(--major) * 1.5)),
     repeating-linear-gradient(-30deg,
-      rgba(var(--mat-line), .09) 0 1px, transparent 1px calc(var(--major) * 1.5));
+      var(--ink-30) 0 1px, transparent 1px calc(var(--major) * 1.5));
   -webkit-mask-image: radial-gradient(ellipse 55% 48% at 50% 47%, transparent 30%, #000 100%);
   mask-image: radial-gradient(ellipse 55% 48% at 50% 47%, transparent 30%, #000 100%);
 }
 
-/* rulers -------------------------------------------------------------- */
-/*  Each strip runs the full width of the surface, so it keeps covering the
-    viewport edge through the lean; the 30px of scale the eye actually sees
-    is pinned to the strip's inner edge with background-position.          */
 .mat__ruler {
   position: absolute;
   --scale: 30px;
@@ -864,9 +809,9 @@ main,
   top: 0;
   height: calc(var(--major) + var(--scale));
   background-image:
-    linear-gradient(to bottom, rgba(8, 14, 11, .32), transparent),
-    linear-gradient(to right, rgba(var(--mat-line), .52) 1px, transparent 1px),
-    linear-gradient(to right, rgba(var(--mat-line), .30) 1px, transparent 1px);
+    linear-gradient(to bottom, var(--shade-ruler), transparent),
+    linear-gradient(to right, var(--ink-tick) 1px, transparent 1px),
+    linear-gradient(to right, var(--ink-tick-sm) 1px, transparent 1px);
   background-size: 100% var(--scale), var(--major) 13px, var(--minor) 6px;
   background-position: 0 100%, 0 100%, 0 100%;
   background-repeat: no-repeat, repeat-x, repeat-x;
@@ -878,15 +823,14 @@ main,
   bottom: 0;
   width: calc(var(--major) + var(--scale));
   background-image:
-    linear-gradient(to right, rgba(8, 14, 11, .32), transparent),
-    linear-gradient(to bottom, rgba(var(--mat-line), .52) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(var(--mat-line), .30) 1px, transparent 1px);
+    linear-gradient(to right, var(--shade-ruler), transparent),
+    linear-gradient(to bottom, var(--ink-tick) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--ink-tick-sm) 1px, transparent 1px);
   background-size: var(--scale) 100%, 13px var(--major), 6px var(--minor);
   background-position: 100% 0, 100% 0, 100% 0;
   background-repeat: no-repeat, repeat-y, repeat-y;
 }
 
-/*  Numbers are written by script.js — CSS cannot count. */
 .mat__num {
   position: absolute;
   font-family: var(--f-sans);
@@ -894,7 +838,7 @@ main,
   font-size: 9px;
   line-height: 1;
   letter-spacing: .06em;
-  color: rgba(var(--mat-line), .48);
+  color: var(--ink-num);
   user-select: none;
 }
 
@@ -908,7 +852,6 @@ main,
   transform: translateY(calc(var(--major) + 4px));
 }
 
-/*  Every mat has its spec printed in a corner. */
 .mat__mark {
   position: absolute;
   right: calc(var(--major) + 44px);
@@ -918,7 +861,7 @@ main,
   font-size: 9px;
   letter-spacing: .34em;
   text-transform: uppercase;
-  color: rgba(var(--mat-line), .26);
+  color: var(--ink-mark);
   user-select: none;
 }
 
@@ -928,19 +871,17 @@ main,
   }
 }
 
-/* edge ---------------------------------------------------------------- */
 .mat__edge {
   position: absolute;
   inset: 0;
   background:
     radial-gradient(ellipse 86% 78% at 50% 42%,
       transparent 42%,
-      rgba(6, 11, 9, .34) 78%,
-      rgba(4, 8, 6, .62) 100%);
-  box-shadow: inset 0 0 0 1px rgba(var(--mat-line), .07);
+      var(--shade-edge) 78%,
+      var(--shade-corner) 100%);
+  box-shadow: inset 0 0 0 1px var(--ink-hair);
 }
 
-/* ------------------------------------------------------------ 9. Chrome */
 .grain {
   position: fixed;
   inset: -50%;
@@ -1034,10 +975,6 @@ main,
   color: var(--paper);
 }
 
-/* ------------------------------------------------------ 10. Responsive */
-
-/* Small laptops: the collage still holds, the type gets a nudge so it does
-   not fall below a comfortable reading size. */
 @media (max-width: 1180px) {
   :root {
     --fs-note: 0.92cqw;
@@ -1061,10 +998,6 @@ main,
   }
 }
 
-/* -------- Below 980px the collage stops being a canvas and becomes a
-   column: same scraps, same angles (gentler), re-stacked instead of shrunk.
-   Squeezing a 1438px composition into a phone would make the type illegible
-   long before it made the layout wrong.                                    */
 @media (max-width: 980px) {
   :root {
     --fs-note: .75rem;
@@ -1101,12 +1034,10 @@ main,
     --lift: 0 !important;
   }
 
-  /* gentler angles in a column */
   .piece--cue .piece__art {
     --straighten: 1;
   }
 
-  /* its rotation flips the arrow — leave it alone */
   .piece:not(.is-in) .piece__art {
     --scale: .95;
   }
@@ -1131,7 +1062,6 @@ main,
     padding-top: 4rem;
   }
 
-  /* Hero, re-composed as a column with the scraps pinned around it */
   .piece--star {
     --mw: 22%;
     align-self: flex-start;
@@ -1170,7 +1100,6 @@ main,
     --mw: 11%;
   }
 
-  /* Board: full-width scraps, text boxes opened up to stay legible */
   .stage--board {
     padding-top: 1rem;
   }
@@ -1249,8 +1178,6 @@ main,
   }
 }
 
-/* Tablets are wide enough for two scraps side by side — a stacked column
-   here would make the page twice as long for no gain in legibility. */
 @media (min-width: 620px) and (max-width: 980px) {
   .stage--board {
     display: grid;
@@ -1313,7 +1240,6 @@ main,
   }
 }
 
-/* Coarse pointers never get the custom cursor. */
 @media (hover: none),
 (pointer: coarse) {
   .has-cursor {
@@ -1325,7 +1251,6 @@ main,
   }
 }
 
-/* ------------------------------------------- 11. Reduced motion / print */
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;

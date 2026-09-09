@@ -1,20 +1,13 @@
-/* =============================================================================
-   davi — visual artist
-   Four small modules, one shared rAF loop. Nothing animates from JS that CSS
-   could animate on its own; JS only supplies values CSS cannot know.
-============================================================================= */
 (() => {
   'use strict';
 
   const reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
   const fine    = window.matchMedia('(hover: hover) and (pointer: fine)');
-  const stacked = window.matchMedia('(max-width: 980px)');   // matches the CSS reflow point
+  const stacked = window.matchMedia('(max-width: 980px)');
 
   const clamp = (v, min, max) => (v < min ? min : v > max ? max : v);
   const lerp  = (a, b, t) => a + (b - a) * t;
 
-  /* ---------------------------------------------------------------- reveal */
-  /* Pieces fade and settle into place the first time they are seen.        */
   function initReveal() {
     const pieces = document.querySelectorAll('.piece');
 
@@ -34,9 +27,6 @@
     pieces.forEach(p => io.observe(p));
   }
 
-  /* -------------------------------------------------------------- parallax */
-  /* Each scrap carries a --depth. Pointer position and scroll offset are
-     translated into --px/--py, which the .piece transform already consumes. */
   function initParallax() {
     if (reduced.matches) return;
 
@@ -48,7 +38,7 @@
     }));
     if (!pieces.length) return;
 
-    let pointerX = 0, pointerY = 0;   // -1 … 1
+    let pointerX = 0, pointerY = 0;
     let scrollY  = window.scrollY;
     let running  = false;
     let idle     = 0;
@@ -69,12 +59,12 @@
       let moved = false;
 
       for (const p of pieces) {
-        // Only spend work on scraps near the viewport.
+
         const rect = p.stage.getBoundingClientRect();
         const near = rect.bottom > -200 && rect.top < window.innerHeight + 200;
         if (!near) continue;
 
-        const drag  = p.depth * 14;                        // pointer response, px
+        const drag  = p.depth * 14;
         const glide = p.depth * (scrollY - (p.stage.offsetTop || 0)) * 0.018;
 
         p.tx = clamp(pointerX * drag, -26, 26);
@@ -90,7 +80,7 @@
       }
 
       idle = moved ? 0 : idle + 1;
-      if (idle > 30) { running = false; return; }          // sleep until input
+      if (idle > 30) { running = false; return; }
       requestAnimationFrame(tick);
     }
 
@@ -100,8 +90,6 @@
     wake();
   }
 
-  /* ---------------------------------------------------------------- cursor */
-  /* A ring that trails the pointer and opens up over anything clickable.    */
   function initCursor() {
     if (!fine.matches || reduced.matches) return;
 
@@ -130,7 +118,7 @@
     window.addEventListener('pointermove', (e) => {
       x = e.clientX; y = e.clientY;
       if (!cursor.classList.contains('is-live')) {
-        rx = x; ry = y;                       // no flight in from the corner
+        rx = x; ry = y;
         document.documentElement.classList.add('cursor-live');
         cursor.classList.add('is-live');
       }
@@ -148,10 +136,6 @@
     document.addEventListener('pointerup',   () => cursor.classList.remove('is-pointing'));
   }
 
-  /* ------------------------------------------------------------------- mat */
-  /* Two jobs CSS cannot do on the cutting mat: count the ruler, and lean the
-     mat a couple of pixels against the pointer. The paper drifts toward the
-     cursor, the mat drifts away, and the two read as separate planes.      */
   function initMat() {
     const mat = document.querySelector('.mat');
     if (!mat) return;
@@ -181,18 +165,16 @@
     window.addEventListener('pointermove', (e) => {
       x = e.clientX;
       y = e.clientY;
-      if (!primed) { cx = x; cy = y; primed = true; }   // no lurch on first move
+      if (!primed) { cx = x; cy = y; primed = true; }
       if (!raf) raf = requestAnimationFrame(draw);
     }, { passive: true });
   }
 
-  /* Ruler numbers, written once against the largest the window could get,
-     so a resize never has to touch the DOM again.                          */
   function numberRulers(mat) {
     const css = getComputedStyle(document.documentElement);
     const step = parseFloat(css.getPropertyValue('--major')) || 140;
     const unit = parseFloat(css.getPropertyValue('--minor')) || 28;
-    const per  = Math.round(step / unit) || 5;        // units between numbers
+    const per  = Math.round(step / unit) || 5;
 
     const fill = (sel, extent, axis) => {
       const ruler = mat.querySelector(sel);
@@ -214,9 +196,6 @@
     fill('.mat__ruler--left', h, 'top');
   }
 
-  /* ----------------------------------------------------------------- cards */
-  /* Detail text is already in the DOM; the toggle only flips its state, so
-     nothing reflows and the board never jumps.                              */
   function initCards() {
     const cards = document.querySelectorAll('.piece--card:not(.piece--contact)');
 
@@ -234,7 +213,6 @@
         set(!card.classList.contains('is-open'));
       });
 
-      // The whole scrap is a hit area, but links inside stay links.
       card.addEventListener('click', (e) => {
         if (e.target.closest('a, button')) return;
         set(!card.classList.contains('is-open'));
@@ -242,7 +220,6 @@
     });
   }
 
-  /* ------------------------------------------------------ smooth anchoring */
   function initAnchors() {
     document.querySelectorAll('a[href^="#"]').forEach((link) => {
       link.addEventListener('click', (e) => {
@@ -260,13 +237,11 @@
     });
   }
 
-  /* ------------------------------------------------------------------ misc */
   function initYear() {
     const el = document.getElementById('year');
     if (el) el.textContent = String(new Date().getFullYear());
   }
 
-  /* Keep the hero letterbox honest when mobile browsers resize their chrome. */
   function initViewport() {
     const set = () => document.documentElement.style
       .setProperty('--vh', window.innerHeight * 0.01 + 'px');
@@ -275,7 +250,6 @@
     window.addEventListener('orientationchange', set, { passive: true });
   }
 
-  /* ------------------------------------------------------------------ boot */
   const boot = () => {
     initReveal();
     initCards();

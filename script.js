@@ -148,6 +148,72 @@
     document.addEventListener('pointerup',   () => cursor.classList.remove('is-pointing'));
   }
 
+  /* ------------------------------------------------------------------- mat */
+  /* Two jobs CSS cannot do on the cutting mat: count the ruler, and lean the
+     mat a couple of pixels against the pointer. The paper drifts toward the
+     cursor, the mat drifts away, and the two read as separate planes.      */
+  function initMat() {
+    const mat = document.querySelector('.mat');
+    if (!mat) return;
+
+    numberRulers(mat);
+    if (reduced.matches || !fine.matches) return;
+
+    const surface = mat.querySelector('.mat__surface');
+    if (!surface) return;
+
+    let x = innerWidth / 2, y = innerHeight * 0.42;
+    let cx = x, cy = y;
+    let raf = 0;
+    let primed = false;
+
+    const draw = () => {
+      cx = lerp(cx, x, 0.08);
+      cy = lerp(cy, y, 0.08);
+
+      surface.style.setProperty('--sx', ((0.5 - cx / innerWidth) * 12).toFixed(1) + 'px');
+      surface.style.setProperty('--sy', ((0.5 - cy / innerHeight) * 8).toFixed(1) + 'px');
+
+      raf = (Math.abs(cx - x) > 0.3 || Math.abs(cy - y) > 0.3)
+        ? requestAnimationFrame(draw) : 0;
+    };
+
+    window.addEventListener('pointermove', (e) => {
+      x = e.clientX;
+      y = e.clientY;
+      if (!primed) { cx = x; cy = y; primed = true; }   // no lurch on first move
+      if (!raf) raf = requestAnimationFrame(draw);
+    }, { passive: true });
+  }
+
+  /* Ruler numbers, written once against the largest the window could get,
+     so a resize never has to touch the DOM again.                          */
+  function numberRulers(mat) {
+    const css = getComputedStyle(document.documentElement);
+    const step = parseFloat(css.getPropertyValue('--major')) || 140;
+    const unit = parseFloat(css.getPropertyValue('--minor')) || 28;
+    const per  = Math.round(step / unit) || 5;        // units between numbers
+
+    const fill = (sel, extent, axis) => {
+      const ruler = mat.querySelector(sel);
+      if (!ruler) return;
+      const frag = document.createDocumentFragment();
+      for (let i = 1; i * step < extent; i++) {
+        const tag = document.createElement('span');
+        tag.className = 'mat__num';
+        tag.textContent = String(i * per);
+        tag.style[axis] = (i * step) + 'px';
+        frag.appendChild(tag);
+      }
+      ruler.appendChild(frag);
+    };
+
+    const w = Math.max(screen.width || 0, innerWidth) + step;
+    const h = Math.max(screen.height || 0, innerHeight) + step;
+    fill('.mat__ruler--top', w, 'left');
+    fill('.mat__ruler--left', h, 'top');
+  }
+
   /* ----------------------------------------------------------------- cards */
   /* Detail text is already in the DOM; the toggle only flips its state, so
      nothing reflows and the board never jumps.                              */
@@ -217,6 +283,7 @@
     initYear();
     initViewport();
     if (!stacked.matches) initParallax();
+    initMat();
     initCursor();
   };
 

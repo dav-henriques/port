@@ -1,89 +1,715 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>davi — visual artist</title>
-<meta name="description" content="Davi — visual artist and designer based in Brazil. Visual identity, graphic design, photography and creative direction.">
-<meta name="theme-color" content="#000000">
+<html lang="pt-BR" data-theme="dark">
 
-<link rel="preload" as="image" href="assets/wordmark-davi.webp">
-<link rel="preload" as="image" href="assets/photo-davi.webp">
-<link rel="preload" as="image" href="assets/polaroid-frame.webp">
-<link rel="stylesheet" href="style.css">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>davi</title>
+  <meta name="description"
+    content="Portfólio de Davi — programador, desenvolvedor web e produtor musical, estudante do Cotemig. HTML, CSS, JavaScript e C#.">
+  <meta name="theme-color" content="#090909">
+  <meta property="og:title" content="davi">
+  <meta property="og:description" content="Programador, desenvolvedor web e produtor musical. Estudante do Cotemig.">
+  <meta property="og:type" content="website">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+
+  <link rel="preload" as="image" href="assets/davi-muro.webp">
+  <link rel="preload" as="image" href="assets/polaroid-frame.webp">
+  <script>
+    (function (root) {
+      try { history.scrollRestoration = 'manual'; } catch (e) {}
+      try {
+        var nav = performance.getEntriesByType && performance.getEntriesByType('navigation')[0];
+        if (nav && nav.type === 'reload' && location.hash) {
+          history.replaceState(null, '', location.pathname + location.search);
+        }
+      } catch (e) {}
+
+      // tema salvo (ou o do sistema) aplicado antes da primeira pintura
+      var tema = null;
+      try { tema = localStorage.getItem('tema'); } catch (e) {}
+      if (tema !== 'light' && tema !== 'dark') {
+        tema = window.matchMedia && matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+      }
+      root.setAttribute('data-theme', tema);
+
+      root.classList.add('motion-pending', 'is-journey');
+      // se o motion não subir, a página cai para o layout estático
+      setTimeout(function () {
+        root.classList.remove('motion-pending');
+        if (!root.classList.contains('journey-ready')) root.classList.remove('is-journey');
+      }, 3000);
+    })(document.documentElement);
+  </script>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="journey.css">
+  <link rel="stylesheet" href="ui.css">
 </head>
 
 <body>
 
-<div class="grain" aria-hidden="true"></div>
+  <a class="skip-link" href="#contato">pular para o contato</a>
 
-<main id="top">
-<section class="hero" aria-labelledby="wordmark">
-  <div class="stage stage--hero">
+  <div class="grain" aria-hidden="true"></div>
 
-    <div class="piece piece--deco piece--star" aria-hidden="true"
-         style="--x:19.6%;--y:33.3%;--w:11.1%;--rot:-25deg;--dur:11s;--delay:-3s;--amp:.55cqw;--spin:.7deg;--depth:.55;--in:.05s">
-      <div class="piece__float"><div class="piece__art">
-        <img src="assets/star.webp" alt="" width="320" height="300" decoding="async">
-      </div></div>
+  <!-- ============ TOPO: logo, tema e menu ============ -->
+  <header class="topbar">
+    <a class="topbar__logo" href="#top" data-go="topo" aria-label="davi — voltar ao início">
+      <span class="mini-tile" style="--bg:#f3f1ec;--fg:#111;--ff:var(--serif);--tr:-6deg">d</span>
+      <span class="mini-tile" style="--bg:#3936ff;--fg:#f3f1ec;--ff:var(--heavy);--tr:4deg">a</span>
+      <span class="mini-tile" style="--bg:#f2d027;--fg:#111;--ff:var(--cond);--tr:-3deg">v</span>
+      <span class="mini-tile" style="--bg:#101014;--fg:#f3f1ec;--ff:var(--type);--tr:5deg">i</span>
+    </a>
+
+    <div class="topbar__actions">
+      <button type="button" class="theme" aria-pressed="false" aria-label="ativar modo claro">
+        <span class="theme__track" aria-hidden="true">
+          <span class="theme__knob">
+            <svg class="theme__icon theme__icon--moon" viewBox="0 0 24 24"><path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z" /></svg>
+            <svg class="theme__icon theme__icon--sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4.2" /><path d="M12 2.5v2.6M12 18.9v2.6M4.6 4.6l1.8 1.8M17.6 17.6l1.8 1.8M2.5 12h2.6M18.9 12h2.6M4.6 19.4l1.8-1.8M17.6 6.4l1.8-1.8" /></svg>
+          </span>
+        </span>
+        <span class="theme__label" aria-hidden="true">escuro</span>
+      </button>
+
+      <button type="button" class="menu-btn" aria-expanded="false" aria-controls="menu">
+        <span class="menu-btn__label">menu</span>
+        <span class="menu-btn__lines" aria-hidden="true"><i></i><i></i></span>
+      </button>
     </div>
+  </header>
 
-    <div class="piece piece--polaroid"
-         style="--x:33.7%;--y:50.0%;--w:20.5%;--rot:-3.2deg;--dur:13s;--delay:-1s;--amp:.5cqw;--spin:.4deg;--depth:.9;--in:.20s">
-      <div class="piece__float"><div class="piece__art">
-        <figure class="polaroid">
-          <img class="polaroid__photo" src="assets/FullSizeRender.jpg">
-          <img class="polaroid__frame" src="assets/polaroid-frame.webp" alt="" width="590" height="721">
-        </figure>
-      </div></div>
-    </div>
-
-    <div class="piece piece--wordmark"
-         style="--x:54.2%;--y:42.5%;--w:23.2%;--rot:0deg;--dur:15s;--delay:-4s;--amp:.35cqw;--spin:.25deg;--depth:1.15;--in:.30s">
-      <div class="piece__float"><div class="piece__art">
-        <h1 class="wordmark" id="wordmark">
-          <picture>
-            <source srcset="assets/wordmark-davi-still.webp" media="(prefers-reduced-motion: reduce)">
-            <img src="assets/wordmark-davi.webp" width="672" height="424" alt="davi" fetchpriority="high">
-          </picture>
-        </h1>
-      </div></div>
-    </div>
-
-    <div class="piece piece--tagline"
-         style="--x:60.3%;--y:56.2%;--w:33.2%;--rot:0deg;--dur:17s;--delay:-7s;--amp:.3cqw;--spin:.2deg;--depth:1;--in:.42s">
-      <div class="piece__float"><div class="piece__art">
-        <p class="tagline">
-          <picture>
-            <source srcset="assets/wordmark-artist-still.webp" media="(prefers-reduced-motion: reduce)">
-            <img src="assets/wordmark-artist.webp" width="960" height="196" alt="Visual artist">
-          </picture>
-        </p>
-      </div></div>
-    </div>
-
-    <div class="piece piece--deco piece--globe" aria-hidden="true"
-         style="--x:76.0%;--y:33.0%;--w:14.5%;--rot:6.5deg;--dur:12s;--delay:-5s;--amp:.6cqw;--spin:.6deg;--depth:.45;--in:.12s">
-      <div class="piece__float"><div class="piece__art">
-        <img src="assets/globe-scrap.webp" alt="" width="418" height="324" decoding="async">
-      </div></div>
-    </div>
-
-    <div class="piece piece--deco piece--oval" aria-hidden="true"
-         style="--x:82.7%;--y:66.7%;--w:14.4%;--rot:-20deg;--dur:14s;--delay:-2s;--amp:.7cqw;--spin:.9deg;--depth:.4;--in:.50s">
-      <div class="piece__float"><div class="piece__art">
-        <img src="assets/oval.webp" alt="" width="414" height="359" decoding="async">
-      </div></div>
-    </div>
-
-    <div class="piece piece--deco piece--tape" aria-hidden="true"
-         style="--x:23.2%;--y:72.4%;--w:16.8%;--rot:17deg;--dur:10s;--delay:-6s;--amp:.5cqw;--spin:.5deg;--depth:.35;--in:.56s">
-      <div class="piece__float"><div class="piece__art">
-        <img src="assets/tape-hazard.webp" alt="" width="484" height="288" decoding="async">
-      </div></div>
-    </div>
+  <div class="menu" id="menu" hidden>
+    <div class="menu__paper" aria-hidden="true"></div>
+    <nav class="menu__nav" aria-label="navegação principal">
+      <ol class="menu__list">
+        <li><a href="#top" data-go="topo"><span class="menu__n">00</span><span class="menu__t">início</span></a></li>
+        <li><a href="#sobre" data-go="sobre"><span class="menu__n">01</span><span class="menu__t">sobre mim</span></a></li>
+        <li><a href="#habilidades" data-go="habilidades"><span class="menu__n">02</span><span class="menu__t">habilidades</span></a></li>
+        <li><a href="#musica" data-go="musica"><span class="menu__n">03</span><span class="menu__t">música</span></a></li>
+        <li><a href="#projetos" data-go="projetos"><span class="menu__n">04</span><span class="menu__t">projetos</span></a></li>
+        <li><a href="#github" data-go="github"><span class="menu__n">05</span><span class="menu__t">github</span></a></li>
+        <li><a href="#contato" data-go="contato"><span class="menu__n">06</span><span class="menu__t">contato</span></a></li>
+      </ol>
+    </nav>
+    <aside class="menu__aside">
+      <ul class="menu__links">
+        <li><a data-perfil="github" href="#"><span data-perfil-text="github">[LINK DO GITHUB]</span></a></li>
+        <li><a data-perfil="email" href="#"><span data-perfil-text="email">[EMAIL]</span></a></li>
+      </ul>
+    </aside>
+    <img class="menu__deco menu__deco--star" src="assets/star.webp" alt="" width="320" height="300" aria-hidden="true">
+    <img class="menu__deco menu__deco--tape" src="assets/tape-hazard.webp" alt="" width="484" height="288" aria-hidden="true">
   </div>
-</section>
-<script src="script.js" defer></script>
+
+  <!-- ============ INÍCIO ============ -->
+  <div class="track" id="track">
+    <main id="top">
+
+      <section class="hero" aria-labelledby="wordmark">
+        <div class="stage stage--hero">
+
+          <div class="piece piece--deco piece--star" aria-hidden="true"
+            style="--x:19.6%;--y:33.3%;--w:11.1%;--rot:-25deg;--dur:11s;--delay:-3s;--amp:.55cqw;--spin:.7deg;--depth:.55;--in:.05s">
+            <div class="piece__float">
+              <div class="piece__art">
+                <img src="assets/star.webp" alt="" width="320" height="300" decoding="async">
+              </div>
+            </div>
+          </div>
+
+          <div class="piece piece--polaroid"
+            style="--x:33.7%;--y:50.0%;--w:20.5%;--rot:-3.2deg;--dur:13s;--delay:-1s;--amp:.5cqw;--spin:.4deg;--depth:.9;--in:.20s">
+            <div class="piece__float">
+              <div class="piece__art">
+                <figure class="polaroid">
+                  <img class="polaroid__photo" src="assets/davi-muro.webp" alt="Foto de Davi" width="844" height="1500">
+                  <img class="polaroid__frame" src="assets/polaroid-frame.webp" alt="" width="590" height="721">
+                </figure>
+              </div>
+            </div>
+          </div>
+
+          <div class="piece piece--wordmark"
+            style="--x:57.2%;--y:42.5%;--w:29%;--rot:0deg;--dur:15s;--delay:-4s;--amp:.35cqw;--spin:.25deg;--depth:1.15;--in:.30s">
+            <div class="piece__float">
+              <div class="piece__art">
+                <!-- o nome em letras-recorte, do mesmo jeito que o letreiro "dev & música" logo abaixo
+                     (e, como ele, as letras trocam de fonte e papel sozinhas) -->
+                <h1 class="wordmark wordmark--tiles" id="wordmark" aria-label="Davi">
+                  <span class="cut" style="--bg:#f3f1ec;--fg:#111;--ff:var(--serif);--tr:-5deg" aria-hidden="true">D</span>
+                  <span class="cut" style="--bg:#101014;--fg:#f3f1ec;--ff:var(--heavy);--tr:3deg" aria-hidden="true">A</span>
+                  <span class="cut" style="--bg:#f2d027;--fg:#111;--ff:var(--cond);--tr:-3deg" aria-hidden="true">V</span>
+                  <span class="cut" style="--bg:#3936ff;--fg:#f3f1ec;--ff:var(--type);--tr:5deg" aria-hidden="true">I</span>
+                </h1>
+              </div>
+            </div>
+          </div>
+
+          <!-- letreiro em letras-recorte (as letras trocam de fonte sozinhas) -->
+          <div class="piece piece--tagline"
+            style="--x:60.3%;--y:56.2%;--w:33.2%;--rot:0deg;--dur:17s;--delay:-7s;--amp:.3cqw;--spin:.2deg;--depth:1;--in:.42s">
+            <div class="piece__float">
+              <div class="piece__art">
+                <p class="tagline tagline--tiles" aria-label="dev e música">
+                  <span class="cut" style="--bg:#f3f1ec;--fg:#111;--ff:var(--serif);--tr:-4deg" aria-hidden="true">d</span>
+                  <span class="cut" style="--bg:#3936ff;--fg:#f3f1ec;--ff:var(--heavy);--tr:3deg" aria-hidden="true">e</span>
+                  <span class="cut" style="--bg:#f2d027;--fg:#111;--ff:var(--cond);--tr:-2deg" aria-hidden="true">v</span>
+                  <span class="cut cut--plus" style="--bg:#ff4fa3;--fg:#111;--ff:var(--heavy);--tr:8deg" aria-hidden="true">&</span>
+                  <span class="cut" style="--bg:#101014;--fg:#f3f1ec;--ff:var(--type);--tr:2deg" aria-hidden="true">m</span>
+                  <span class="cut" style="--bg:#f3f1ec;--fg:#111;--ff:var(--cond);--tr:-5deg" aria-hidden="true">ú</span>
+                  <span class="cut" style="--bg:#3936ff;--fg:#f3f1ec;--ff:var(--serif);--tr:4deg" aria-hidden="true">s</span>
+                  <span class="cut" style="--bg:#f2d027;--fg:#111;--ff:var(--heavy);--tr:-3deg" aria-hidden="true">i</span>
+                  <span class="cut" style="--bg:#ff4fa3;--fg:#111;--ff:var(--type);--tr:5deg" aria-hidden="true">c</span>
+                  <span class="cut" style="--bg:#f3f1ec;--fg:#111;--ff:var(--heavy);--tr:-2deg" aria-hidden="true">a</span>
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div class="piece piece--role"
+            style="--x:58.4%;--y:67.2%;--w:30%;--rot:-1deg;--dur:16s;--delay:-3s;--amp:.3cqw;--spin:.2deg;--depth:.95;--in:.62s">
+            <div class="piece__float">
+              <div class="piece__art">
+              </div>
+            </div>
+          </div>
+
+          <div class="piece piece--deco piece--globe" aria-hidden="true"
+            style="--x:76.0%;--y:33.0%;--w:14.5%;--rot:6.5deg;--dur:12s;--delay:-5s;--amp:.6cqw;--spin:.6deg;--depth:.45;--in:.12s">
+            <div class="piece__float">
+              <div class="piece__art">
+                <img src="assets/globe-scrap.webp" alt="" width="418" height="324" decoding="async">
+              </div>
+            </div>
+          </div>
+
+          <div class="piece piece--deco piece--oval" aria-hidden="true"
+            style="--x:82.7%;--y:66.7%;--w:14.4%;--rot:-20deg;--dur:14s;--delay:-2s;--amp:.7cqw;--spin:.9deg;--depth:.4;--in:.50s">
+            <div class="piece__float">
+              <div class="piece__art">
+                <img src="assets/oval.webp" alt="" width="414" height="359" decoding="async">
+              </div>
+            </div>
+          </div>
+
+          <div class="piece piece--deco piece--tape" aria-hidden="true"
+            style="--x:23.2%;--y:72.4%;--w:16.8%;--rot:17deg;--dur:10s;--delay:-6s;--amp:.5cqw;--spin:.5deg;--depth:.35;--in:.56s">
+            <div class="piece__float">
+              <div class="piece__art">
+                <img src="assets/tape-hazard.webp" alt="" width="484" height="288" decoding="async">
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <section class="next" id="next" aria-label="portfólio">
+    <div class="next__edge" aria-hidden="true"></div>
+    <div class="next__glow" aria-hidden="true"></div>
+    <div class="next__flash" aria-hidden="true"></div>
+
+    <!--
+      a jornada: a viewport fica presa e o scroll vertical move a câmera na horizontal.
+      coordenadas das peças (.bit) em unidades da altura da cena: --x --y --w (e --px --py --pw no retrato)
+    -->
+    <div class="journey" id="journey">
+      <div class="journey__lens">
+
+        <div class="journey__far" aria-hidden="true">
+          <div class="far__track">
+            <img class="far__mark" src="assets/oval.webp" alt="" width="414" height="359" style="--l:4%;--t:6%;--s:78vh;--r:-12deg">
+            <img class="far__mark" src="assets/globe-scrap.webp" alt="" width="418" height="324" style="--l:55%;--t:4%;--s:52vh;--r:-8deg">
+            <img class="far__mark" src="assets/oval.webp" alt="" width="414" height="359" style="--l:78%;--t:50%;--s:60vh;--r:30deg">
+          </div>
+        </div>
+
+        <div class="journey__world">
+
+          <!-- ============ SOBRE MIM ============ -->
+          <section class="scene scene--about" id="sobre" data-scene="sobre" data-label="sobre mim" aria-label="sobre mim">
+            <!-- fundo azul, texto preto e duas fotos: tudo em unidades da altura da cena (--px --py --pw no retrato) -->
+
+            <p class="bit about__lead" style="--x:8;--y:22;--w:84;--px:5;--py:19;--pw:57">
+              oi, eu sou o davi. programador, desenvolvedor web e produtor musical.
+            </p>
+
+            <p class="bit about__text" style="--x:8;--y:51;--w:60;--px:5;--py:48;--pw:57">
+              estudo no cotemig e crio interfaces, experiências interativas e soluções criativas
+              com html, css, javascript e c#. além de programador, sou produtor musical.
+            </p>
+
+            <figure class="bit about__pic" data-depth="0.12" style="--x:104;--y:15;--w:38;--px:72;--py:12;--pw:40">
+              <div class="about__frame">
+                <!-- o arquivo vem inclinado ~5.7°: --fix endireita e --cover amplia até esconder as pontas -->
+                <img src="assets/photo-davi.webp" alt="Davi, de cabelo cacheado e camiseta preta, olhando para o lado" width="418" height="503" style="--fix:5.7deg;--cover:1.2">
+              </div>
+              <figcaption class="about__cap"></figcaption>
+            </figure>
+
+            <figure class="bit about__pic" data-depth="0.3" style="--x:150;--y:30;--w:27;--px:120;--py:28;--pw:28">
+              <div class="about__frame">
+                <img src="assets/davi-muro.webp" alt="Davi sentado num muro, com a mão na frente do rosto" width="844" height="1500">
+              </div>
+              <figcaption class="about__cap"></figcaption>
+            </figure>
+
+          </section>
+
+          <!-- ============ 01 · HABILIDADES ============ -->
+          <section class="scene scene--skills" id="habilidades" data-scene="habilidades" data-label="habilidades" aria-labelledby="skills-title">
+            <div class="skills__paper" aria-hidden="true"></div>
+
+            <h2 class="bit skills__title" id="skills-title" style="--x:11;--y:11;--w:96;--pw:62">habilidades</h2>
+            <p class="bit p__desc p__desc--ink" style="--x:12;--y:31;--w:62;--pw:58">as linguagens que eu domino e uso para criar interfaces, experiências interativas e soluções criativas.</p>
+
+            <!-- os cartões das linguagens espalhados pela mesa, em onda.
+                 --cx --cy é a posição de cada um (em alturas de cena, contadas do canto da cena) e --cr a inclinação -->
+            <div class="bit skills__board" style="--x:0;--y:0;--w:215">
+              <ul class="skills__list">
+                <li class="skill" style="--c:#ff4fa3;--t:#111;--cx:12;--cy:48;--cr:-3deg">
+                  <span class="skill__glyph" aria-hidden="true">&lt;/&gt;</span>
+                  <h3 class="skill__name">HTML</h3>
+                  <p class="skill__what">estrutura e semântica das páginas</p>
+                </li>
+                <li class="skill" style="--c:#3936ff;--t:#f3f1ec;--cx:59;--cy:57;--cr:2.5deg">
+                  <span class="skill__glyph" aria-hidden="true">{ }</span>
+                  <h3 class="skill__name">CSS</h3>
+                  <p class="skill__what">layout, estilo e animação</p>
+                </li>
+                <li class="skill" style="--c:#f2d027;--t:#111;--cx:112;--cy:24;--cr:-2deg;--ns:5cqh">
+                  <span class="skill__glyph" aria-hidden="true">( ) =&gt;</span>
+                  <h3 class="skill__name">JavaScript</h3>
+                  <p class="skill__what">interação e lógica no navegador</p>
+                </li>
+                <li class="skill" style="--c:#101014;--t:#f3f1ec;--cx:160;--cy:44;--cr:3deg">
+                  <span class="skill__glyph" aria-hidden="true">&lt;T&gt;</span>
+                  <h3 class="skill__name">C#</h3>
+                  <p class="skill__what">lógica e orientação a objetos</p>
+                </li>
+              </ul>
+            </div>
+          </section>
+
+          <!-- ============ 02 · MÚSICA ============
+               a referência é o álbum "small hours", de sunn: a cena vira madrugada azul,
+               a capa acende como luz de rua quando a câmera chega e o iPod toca as prévias do álbum.
+               capa em assets/musica/small-hours.jpg e prévias de 30 s em assets/musica/previas/ -->
+          <section class="scene scene--music" id="musica" data-scene="musica" data-label="música" aria-labelledby="music-title">
+            <div class="music__floor" aria-hidden="true"></div>
+
+            <h2 class="bit tiles music__title" id="music-title" aria-label="prod" style="--x:8;--y:11">
+              <span class="tile" aria-hidden="true" style="--bg:#f3f1ec;--fg:#111;--ff:var(--serif);--tr:-4deg"><span class="tile__face">P</span></span>
+              <span class="tile" aria-hidden="true" style="--bg:#101014;--fg:#f3f1ec;--ff:var(--heavy);--tr:3deg"><span class="tile__face">R</span></span>
+              <span class="tile" aria-hidden="true" style="--bg:#e23a48;--fg:#f3f1ec;--ff:var(--cond);--tr:-2deg"><span class="tile__face">O</span></span>
+              <span class="tile" aria-hidden="true" style="--bg:#3936ff;--fg:#f3f1ec;--ff:var(--type);--tr:5deg"><span class="tile__face">D</span></span>
+            </h2>
+
+            <p class="bit p__desc music__desc" style="--x:9;--y:44;--w:50;--py:33;--pw:54">além da programação, sou produtor musical. a música é o meu outro jeito de criar.</p>
+
+            <p class="bit music__more" style="--x:9;--y:63;--py:62">
+              <button type="button" class="tag tag--paper" data-modal="tpl-musica">ouvir small hours →</button>
+            </p>
+
+            <!-- a capa do álbum: um botão que abre o player -->
+            <div class="bit music__album" data-depth="0.06" style="--x:100;--y:9;--w:72;--r:-3deg;--px:82;--py:16;--pw:56">
+              <span class="album__halo" aria-hidden="true"></span>
+              <button type="button" class="album" data-modal="tpl-musica" aria-label="small hours, álbum de sunn: abrir o player">
+                <img class="album__art" src="assets/musica/small-hours.jpg" alt="" width="640" height="640" decoding="async">
+                <span class="album__sheen" aria-hidden="true"></span>
+              </button>
+            </div>
+
+            <!-- o iPod do small hours (a lógica fica em ipod.js): gire a roda arrastando em volta dela
+                 (ou com as setas do teclado) para navegar, o centro escolhe, "menu" volta, ▶❚❚ toca e pausa,
+                 ⏮ ⏭ trocam de faixa. ele toca as prévias de 30 s do álbum (data-src em cada faixa) -->
+            <div class="bit music__ipod" data-depth="0.1" style="--x:184;--y:10;--w:46;--px:146;--py:10;--pw:44">
+              <div class="ipod" data-view="menu">
+                <div class="ipod__screen">
+                  <div class="ipod__bar" aria-hidden="true">
+                    <span class="ipod__state">
+                      <svg class="ipod__icon ipod__icon--play" viewBox="0 0 10 10"><path d="M2 1v8l7-4z" /></svg>
+                      <svg class="ipod__icon ipod__icon--pause" viewBox="0 0 10 10"><path d="M2 1h2v8H2zM6 1h2v8H6z" /></svg>
+                    </span>
+                    <span class="ipod__head">iPod</span>
+                    <span class="ipod__battery"><i></i></span>
+                  </div>
+                  <div class="ipod__views">
+                    <div class="ipod__view ipod__menu" data-view="menu">
+                      <ul class="ipod__list" aria-label="menu do iPod">
+                        <li class="is-on" data-open="now">tocando agora</li>
+                        <li data-open="tracks">small hours</li>
+                        <li data-open="spotify" data-modal="tpl-musica">ouvir no spotify</li>
+                      </ul>
+                      <img class="menu__art" src="assets/musica/small-hours.jpg" alt="" width="640" height="640" loading="lazy" decoding="async">
+                    </div>
+                    <ol class="ipod__view ipod__list ipod__list--tracks" data-view="tracks" aria-label="faixas de small hours" hidden>
+                      <li data-src="assets/musica/previas/01-before-sunrise.mp3"><span>before sunrise</span><small>1:46</small></li>
+                      <li data-src="assets/musica/previas/02-street-lights.mp3"><span>street lights</span><small>2:14</small></li>
+                      <li data-src="assets/musica/previas/03-grey-skies.mp3"><span>grey skies</span><small>1:32</small></li>
+                      <li data-src="assets/musica/previas/04-empty-streets.mp3"><span>empty streets</span><small>2:04</small></li>
+                      <li data-src="assets/musica/previas/05-late-night.mp3"><span>late night</span><small>1:58</small></li>
+                      <li data-src="assets/musica/previas/06-hard-to-say.mp3"><span>hard to say</span><small>1:58</small></li>
+                      <li data-src="assets/musica/previas/07-at-the-deck.mp3"><span>at the deck</span><small>2:46</small></li>
+                    </ol>
+                    <div class="ipod__view ipod__now" data-view="now" hidden>
+                      <div class="now__top">
+                        <img class="now__art" src="assets/musica/small-hours.jpg" alt="" width="640" height="640" loading="lazy" decoding="async">
+                        <div class="now__info">
+                          <p class="now__count">1 de 7</p>
+                          <p class="now__title">before sunrise</p>
+                          <p class="now__artist">sunn</p>
+                          <p class="now__album">small hours</p>
+                        </div>
+                      </div>
+                      <div class="now__viz" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+                      <div class="now__bar" aria-hidden="true"><i></i></div>
+                      <p class="now__time" aria-hidden="true"><span class="now__el">0:00</span><span class="now__tag">prévia</span><span class="now__left">-0:30</span></p>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="ipod__wheel">
+                  <div class="ipod__ring" tabindex="0" role="group" aria-label="roda do iPod: setas para navegar, Enter para escolher, Esc para voltar"></div>
+                  <button type="button" class="ipod__key ipod__key--menu" aria-label="menu: voltar">menu</button>
+                  <button type="button" class="ipod__key ipod__key--next" aria-label="próxima faixa">
+                    <svg viewBox="0 0 20 10" aria-hidden="true"><path d="M1 1v8l7-4zM9 1v8l7-4zM17 1h2v8h-2z" /></svg>
+                  </button>
+                  <button type="button" class="ipod__key ipod__key--play" aria-label="tocar ou pausar">
+                    <svg viewBox="0 0 20 10" aria-hidden="true"><path d="M1 1v8l7-4zM11 1h2.4v8H11zM16 1h2.4v8H16z" /></svg>
+                  </button>
+                  <button type="button" class="ipod__key ipod__key--prev" aria-label="faixa anterior">
+                    <svg viewBox="0 0 20 10" aria-hidden="true"><path d="M1 1h2v8H1zM11 1v8L4 5zM19 1v8l-7-4z" /></svg>
+                  </button>
+                  <button type="button" class="ipod__center" aria-label="escolher"></button>
+                </div>
+                <p class="ipod__live sr-only" aria-live="polite"></p>
+              </div>
+            </div>
+
+          </section>
+
+          <!-- ============ 03 · PROJETOS ============
+               cada cópia é um card-modelo: troque o texto e a imagem aqui
+               e os detalhes nos <template id="tpl-projeto-0X"> no fim da página.
+               imagens: assets/projetos/projeto-0X.svg é só um placeholder — coloque a sua
+               (jpg, png ou webp) na mesma pasta e ajuste o src do <img> aqui e no <template>
+               do mesmo projeto. o card recorta em 4:5 e o modal em 16:9 (object-fit: cover),
+               então deixe o assunto principal no centro da imagem. -->
+          <section class="scene scene--work" id="projetos" data-scene="projetos" data-label="projetos" aria-labelledby="work-title">
+            <div class="work__safelight" aria-hidden="true"></div>
+
+
+            <div class="bit work__feature" data-depth="0.08" style="--x:70;--y:13;--w:42;--r:2.5deg">
+              <button type="button" class="bit__in print project" data-modal="tpl-projeto-01" aria-label="ver detalhes do projeto 01">
+                <span class="print__frame">
+                  <span class="project__img"><img src="assets/projetos/craterecords.jpg" alt="[DESCREVA A IMAGEM DO PROJETO 01]" width="1600" height="900" decoding="async"></span>
+                  <span class="print__fog" aria-hidden="true"></span>
+                </span>
+                <span class="print__cap">Crate Records</span>
+                <span class="project__more" aria-hidden="true">ver detalhes →</span>
+              </button>
+            </div>
+
+            <h2 class="bit work__title" id="work-title" style="--x:9;--y:13;--w:70">
+              <span class="work__ghost">projetos</span>
+              <span class="work__fill" aria-hidden="true">projetos</span>
+            </h2>
+            <p class="bit p__desc" style="--x:10;--y:40;--w:44">meus projetos que fiz até hoje.</p>
+            <p class="bit work__more" style="--x:10;--y:60;--w:44">
+              <a class="tag tag--paper" data-go="github" href="#github">todos no github →</a>
+            </p>
+
+            <div class="bit work__line" style="--x:122;--y:13;--w:140">
+              <svg class="line__string" viewBox="0 0 620 60" preserveAspectRatio="none" aria-hidden="true"><path d="M0 14 Q 310 58 620 10" /></svg>
+              <div class="swing" style="--sx:18%;--sy:2.8cqh;--sr:-3deg">
+                <span class="swing__body">
+                  <span class="swing__pin" aria-hidden="true"></span>
+                  <button type="button" class="swing__print project" data-modal="tpl-projeto-02" aria-label="ver detalhes do projeto 02">
+                    <span class="project__img"><img src="assets/projetos/landingpagecard.png" alt="[DESCREVA A IMAGEM DO PROJETO 02]" width="1600" height="900" decoding="async"></span>
+                    <span class="swing__cap">Landing Page</span>
+                  </button>
+                </span>
+              </div>
+              <div class="swing" style="--sx:52%;--sy:3.5cqh;--sr:2deg">
+                <span class="swing__body">
+                  <span class="swing__pin" aria-hidden="true"></span>
+                  <button type="button" class="swing__print project" data-modal="tpl-projeto-03" aria-label="ver detalhes do projeto 03">
+                    <span class="project__img"><img src="assets/projetos/boardcard.png" alt="[DESCREVA A IMAGEM DO PROJETO 03]" width="1600" height="900" decoding="async"></span>
+                    <span class="swing__cap">LinkTree</span>
+                  </button>
+                </span>
+              </div>
+              <div class="swing" style="--sx:84%;--sy:2.4cqh;--sr:-2deg">
+                <span class="swing__body">
+                  <span class="swing__pin" aria-hidden="true"></span>
+                  <button type="button" class="swing__print project" data-modal="tpl-projeto-04" aria-label="ver detalhes do projeto 04">
+                    <span class="project__img"><img src="assets/projetos/terminalcard.png" alt="[DESCREVA A IMAGEM DO PROJETO 04]" width="1600" height="900" decoding="async"></span>
+                    <span class="swing__cap">Terminal</span>
+                  </button>
+                </span>
+              </div>
+            </div>
+          </section>
+
+          <!-- a foto que vira transição: cresce até ocupar a tela e segura a cena seguinte -->
+          <div class="scene scene--portal" data-scene="portal" aria-hidden="true">
+            <div class="portal">
+              <img class="portal__img" src="assets/davi-muro.webp" alt="" width="844" height="1500">
+              <span class="portal__shade"></span>
+            </div>
+          </div>
+
+          <!-- ============ 04 · GITHUB ============ -->
+          <section class="scene scene--git" id="github" data-scene="github" data-label="github" aria-labelledby="git-title">
+            <h2 class="bit git__title" id="git-title" style="--x:7;--y:20;--w:70">github</h2>
+            <p class="bit p__desc" style="--x:8;--y:42;--w:46">o código dos meus projetos fica no github. é por lá que dá para ver como cada coisa foi construída, linha por linha.</p>
+            <p class="bit git__cta" style="--x:8;--y:68;--w:50">
+              <a class="tag tag--blue git__link" data-perfil="github" href="#" data-magnetic>
+                abrir meu github ↗
+                <small data-perfil-text="github">[LINK DO GITHUB]</small>
+              </a>
+            </p>
+
+            <figure class="bit git__term" data-depth="0.1" style="--x:76;--y:16;--w:44">
+              <div class="term" aria-hidden="true">
+                <div class="term__bar"><i></i><i></i><i></i><span>~/projetos</span></div>
+                <pre class="term__body"><code><span class="term__type">$ git clone <span data-perfil-text="github">[LINK DO GITHUB]</span>
+$ cd [REPOSITÓRIO]
+$ ls
+index.html  style.css  script.js
+$ </span><span class="term__caret">▍</span></code></pre>
+              </div>
+            </figure>
+          </section>
+
+        </div>
+
+      </div>
+
+      <div class="journey__bars" aria-hidden="true"><i class="bar bar--top"></i><i class="bar bar--bottom"></i></div>
+    </div>
+  </section>
+
+  <!-- ============ CONTATO — o scroll volta a ser vertical ============ -->
+  <section class="outro" id="contato" aria-labelledby="outro-title">
+    <div class="outro__stage">
+      <div class="outro__intro">
+        <h2 class="outro__title" id="outro-title" aria-label="vamos conversar?">
+          <span class="tiles outro__tiles" aria-hidden="true">
+            <span class="tile" style="--bg:#f3f1ec;--fg:#111;--ff:var(--serif);--tr:-3deg"><span class="tile__face">v</span></span>
+            <span class="tile" style="--bg:#3936ff;--fg:#f3f1ec;--ff:var(--heavy);--tr:4deg"><span class="tile__face">a</span></span>
+            <span class="tile" style="--bg:#f2d027;--fg:#111;--ff:var(--cond);--tr:-2deg"><span class="tile__face">m</span></span>
+            <span class="tile" style="--bg:#101014;--fg:#f3f1ec;--ff:var(--type);--tr:3deg"><span class="tile__face">o</span></span>
+            <span class="tile" style="--bg:#ff4fa3;--fg:#111;--ff:var(--serif);--tr:-4deg"><span class="tile__face">s</span></span>
+          </span>
+          <span class="outro__line" aria-hidden="true">conversar?</span>
+        </h2>
+        <p class="outro__lead">tem uma ideia, um projeto ou quer falar de música? me manda uma mensagem.</p>
+        <ul class="outro__info">
+          <li><span class="outro__key">e-mail</span><a data-perfil="email" href="#"><span data-perfil-text="email">[EMAIL]</span></a></li>
+          <li><span class="outro__key">telefone</span><a data-perfil="telefone" href="#"><span data-perfil-text="telefone">[TELEFONE]</span></a></li>
+          <li><span class="outro__key">github</span><a data-perfil="github" href="#"><span data-perfil-text="github">[LINK DO GITHUB]</span></a></li>
+        </ul>
+      </div>
+
+      <form class="form" id="form-contato" novalidate aria-labelledby="form-title">
+        <div class="form__sheet">
+          <p class="form__title" id="form-title">mande uma mensagem</p>
+
+          <div class="field">
+            <label class="field__label" for="f-nome">nome</label>
+            <input class="field__input" id="f-nome" name="nome" type="text" autocomplete="name" maxlength="80" required aria-describedby="e-nome">
+            <span class="field__line" aria-hidden="true"></span>
+            <p class="field__error" id="e-nome" role="alert"></p>
+          </div>
+
+          <div class="field field--half">
+            <label class="field__label" for="f-tel">telefone</label>
+            <input class="field__input" id="f-tel" name="telefone" type="tel" inputmode="numeric" autocomplete="tel-national" placeholder="(31) 99999-9999" maxlength="15" required aria-describedby="e-tel">
+            <span class="field__line" aria-hidden="true"></span>
+            <p class="field__error" id="e-tel" role="alert"></p>
+          </div>
+
+          <div class="field field--half">
+            <label class="field__label" for="f-email">e-mail</label>
+            <input class="field__input" id="f-email" name="email" type="email" inputmode="email" autocomplete="email" placeholder="voce@email.com" maxlength="120" required aria-describedby="e-email">
+            <span class="field__line" aria-hidden="true"></span>
+            <p class="field__error" id="e-email" role="alert"></p>
+          </div>
+
+          <div class="field">
+            <label class="field__label" for="f-msg">mensagem</label>
+            <textarea class="field__input field__input--area" id="f-msg" name="mensagem" rows="5" maxlength="800" required aria-describedby="e-msg c-msg"></textarea>
+            <span class="field__line" aria-hidden="true"></span>
+            <p class="field__count" id="c-msg"><span>0</span>/800</p>
+            <p class="field__error" id="e-msg" role="alert"></p>
+          </div>
+
+          <!-- armadilha para robôs: fica escondida para pessoas -->
+          <div class="form__trap" aria-hidden="true">
+            <label for="f-site">não preencha</label>
+            <input id="f-site" name="site" type="text" tabindex="-1" autocomplete="off">
+          </div>
+
+          <div class="form__foot">
+            <button class="form__send" type="submit">
+              <span class="form__send-label">enviar</span>
+              <svg class="form__send-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11.5 21 3l-6.5 18-3-7.5z" /></svg>
+            </button>
+            <p class="form__status" role="status" aria-live="polite"></p>
+          </div>
+        </div>
+
+        <div class="form__done" hidden>
+          <span class="form__stamp" aria-hidden="true">enviado</span>
+          <p class="form__thanks">obrigado<span class="form__who"></span>! <span class="form__note">sua mensagem chegou.</span></p>
+          <button class="tag tag--paper form__again" type="button">escrever outra</button>
+        </div>
+      </form>
+
+      <img class="outro__deco outro__deco--star" src="assets/star.webp" alt="" width="320" height="300" aria-hidden="true">
+      <img class="outro__deco outro__deco--globe" src="assets/globe-scrap.webp" alt="" width="418" height="324" aria-hidden="true">
+      <img class="outro__deco outro__deco--tape" src="assets/tape-hazard.webp" alt="" width="484" height="288" aria-hidden="true">
+      <img class="outro__deco outro__deco--oval" src="assets/oval.webp" alt="" width="414" height="359" aria-hidden="true">
+    </div>
+  </section>
+
+  <!-- ============ RODAPÉ ============ -->
+  <footer class="site-foot">
+    <div class="site-foot__grid">
+      <div class="site-foot__brand">
+        <p class="site-foot__name">
+          <span class="mini-tile" style="--bg:#f3f1ec;--fg:#111;--ff:var(--serif);--tr:-6deg">d</span>
+          <span class="mini-tile" style="--bg:#3936ff;--fg:#f3f1ec;--ff:var(--heavy);--tr:4deg">a</span>
+          <span class="mini-tile" style="--bg:#f2d027;--fg:#111;--ff:var(--cond);--tr:-3deg">v</span>
+          <span class="mini-tile" style="--bg:#101014;--fg:#f3f1ec;--ff:var(--type);--tr:5deg">i</span>
+        </p>
+        <p class="site-foot__role">desenvolvedor web · produtor musical<br>estudante do cotemig</p>
+      </div>
+
+      <div class="site-foot__col">
+        <p class="site-foot__head">contato</p>
+        <ul>
+          <li><a data-perfil="email" href="#"><span data-perfil-text="email">[EMAIL]</span></a></li>
+          <li><a data-perfil="telefone" href="#"><span data-perfil-text="telefone">[TELEFONE]</span></a></li>
+          <li><a data-perfil="github" href="#"><span data-perfil-text="github">[LINK DO GITHUB]</span></a></li>
+          <li><a href="#contato" data-go="contato">formulário de contato</a></li>
+        </ul>
+      </div>
+
+      <div class="site-foot__col">
+        <p class="site-foot__head">navegação</p>
+        <ul>
+          <li><a href="#sobre" data-go="sobre">sobre mim</a></li>
+          <li><a href="#habilidades" data-go="habilidades">habilidades</a></li>
+          <li><a href="#musica" data-go="musica">música</a></li>
+          <li><a href="#projetos" data-go="projetos">projetos</a></li>
+          <li><a href="#github" data-go="github">github</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="site-foot__base">
+      <p>© <span id="year">2026</span> davi — feito com HTML, CSS e JavaScript</p>
+      <button type="button" class="site-foot__top" data-top>voltar ao começo <span aria-hidden="true">↑</span></button>
+    </div>
+  </footer>
+
+  <!-- ============ MODAL ============ -->
+  <dialog class="modal" id="modal" aria-labelledby="modal-title">
+    <div class="modal__sheet" tabindex="-1">
+      <button type="button" class="modal__close" aria-label="fechar">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 5l14 14M19 5L5 19" /></svg>
+      </button>
+      <div class="modal__body"></div>
+    </div>
+  </dialog>
+
+  <!-- mini-player: aparece no canto quando o iPod está tocando e saiu da tela (ipod.js cuida dele) -->
+  <button type="button" class="miniplayer" hidden aria-label="pausar small hours">
+    <img class="miniplayer__art" src="assets/musica/small-hours.jpg" alt="" width="640" height="640" loading="lazy" decoding="async">
+    <span class="miniplayer__txt"><b class="miniplayer__title">before sunrise</b><small>sunn · small hours</small></span>
+    <span class="miniplayer__icon" aria-hidden="true"><i></i><i></i></span>
+  </button>
+
+  <!--
+    conteúdo dos modais — cada projeto tem o seu <template>.
+    troque os textos entre colchetes e os href="#" pelos seus links
+    (e remova o atributo data-placeholder dos links preenchidos).
+  -->
+  <template id="tpl-projeto-01">
+    <h2 class="modal__title" id="modal-title">Crate Records</h2>
+    <div class="modal__media"><img src="assets/projetos/craterecords.png" alt="[DESCREVA A IMAGEM DO PROJETO 01]" width="1600" height="900"></div>
+    <p class="modal__text">Uma expêriencia de e-commerce para descobrir, colecionar e viver música em vinil.</p>
+    <ul class="modal__tags"><li>[MÚSICA]</li><li>[E-COMMERCE]</li></ul>
+    <div class="modal__actions">
+      <a class="tag tag--blue" href="https://davhenriqueso.github.io/CrateRecords/" data-placeholder>[LINK DO PROJETO]</a>
+      
+    </div>
+  </template>
+
+  <template id="tpl-projeto-02">
+    <h2 class="modal__title" id="modal-title">Landing Page / OCTANE</h2>
+    <div class="modal__media"><img src="assets/projetos/landingpage.png" alt="[DESCREVA A IMAGEM DO PROJETO 02]" width="1600" height="900"></div>
+    <p class="modal__text">Uma experiência de landing page para descobrir, colecionar e viver a música em vinil.</p>
+    <ul class="modal__tags"><li>[MÚSICA]</li><li>[E-COMMERCE]</li></ul>
+    <div class="modal__actions">
+      <a class="tag tag--blue" href="https://davhenriqueso.github.io/LandingPage/" data-placeholder>[LINK DO PROJETO]</a>
+      
+    </div>
+  </template>
+
+  <template id="tpl-projeto-03">
+    <h2 class="modal__title" id="modal-title">Linktree / SUNN</h2>
+    <div class="modal__media"><img src="assets/projetos/board.png" alt="[DESCREVA A IMAGEM DO PROJETO 03]" width="1600" height="900"></div>
+    <p class="modal__text">Uma expêriencia de Linktree para minhas plataformas musicais.</p>
+    <ul class="modal__tags"><li>[MÚSICA]</li><li>[LINKTREE]</li></ul>
+    <div class="modal__actions">
+      <a class="tag tag--blue" href="https://dav-henriques.github.io/board/" data-placeholder>[LINK DO PROJETO]</a>
+      
+    </div>
+  </template>
+
+  <template id="tpl-projeto-04">
+    <p class="modal__eyebrow">projeto 04</p>
+    <h2 class="modal__title" id="modal-title">Chat / TERMINAL</h2>
+    <div class="modal__media"><img src="assets/projetos/terminal.png" alt="[DESCREVA A IMAGEM DO PROJETO 04]" width="1600" height="900"></div>
+    <p class="modal__text">Uma expêriencia de chat com estetica de terminal feita com Google Firebase.</p>
+    <ul class="modal__tags"><li>[TECNOLOGIA]</li><li>[CHAT]</li></ul>
+    <div class="modal__actions">
+      <a class="tag tag--blue" href="https://dav-henriques.github.io/terminal/" data-placeholder>[LINK DO PROJETO]</a>
+      
+    </div>
+  </template>
+
+  <!-- o player do Spotify só carrega quando o modal abre (o conteúdo de um <template> fica inerte até lá) -->
+  <template id="tpl-musica">
+    <p class="modal__eyebrow">música · sunn</p>
+    <h2 class="modal__title" id="modal-title">small hours</h2>
+    <iframe class="modal__player" title="Spotify: small hours, de sunn" src="https://open.spotify.com/embed/album/58isKrcYSak1iIObj8gwvY?utm_source=generator&amp;theme=0" width="100%" height="352" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+    <p class="modal__text">além do código, eu produzo música como sunn. small hours é o meu álbum: 7 faixas, lançado em 2026.</p>
+    <div class="modal__actions">
+      <a class="tag tag--blue" href="https://open.spotify.com/album/58isKrcYSak1iIObj8gwvY" target="_blank" rel="noopener">ouvir no spotify ↗</a>
+      <a class="tag tag--black" data-perfil="musica" href="#"><span data-perfil-text="musica">[LINK DAS MÚSICAS]</span></a>
+    </div>
+  </template>
+
+  <script src="config.js" defer></script>
+  <script src="vendor/gsap/gsap.min.js" defer></script>
+  <script src="vendor/gsap/ScrollTrigger.min.js" defer></script>
+  <script src="vendor/gsap/SplitText.min.js" defer></script>
+  <script src="vendor/gsap/CustomEase.min.js" defer></script>
+  <script src="vendor/gsap/DrawSVGPlugin.min.js" defer></script>
+  <script src="vendor/gsap/ScrollToPlugin.min.js" defer></script>
+  <script src="ui.js" defer></script>
+  <script src="motion.js" defer></script>
+  <script src="ipod.js" defer></script>
+  <script src="journey.js" defer></script>
+  <script src="script.js" defer></script>
 </body>
+
 </html>

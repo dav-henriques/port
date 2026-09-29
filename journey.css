@@ -1,0 +1,1362 @@
+/*
+ * journey.css — "sobre mim" e a viagem horizontal: habilidades, música, projetos e github.
+ *
+ * Sem JS (ou antes dele), a jornada é uma faixa rolável na horizontal.
+ * Com html.is-journey, a viewport fica presa (sticky) e o motion move a câmera.
+ * Dentro de cada cena, 1cqh = 1% da altura do palco: tudo escala junto com a tela.
+ */
+
+:root {
+  --skills-paper: #ece8df;
+  --work-fill: #ffd9a0;
+  --work-glow: rgba(255, 170, 80, .35);
+}
+
+:root[data-theme="light"] {
+  --skills-paper: #fbf9f4;
+  --work-fill: #c2641b;
+  --work-glow: rgba(194, 100, 27, .18);
+}
+
+/* ---------- a moldura ---------- */
+
+.journey {
+  --sh: min(100vh, 150vw);
+  --sh: min(100svh, 150vw);
+  position: relative;
+  height: var(--sh);
+  overflow-x: auto;
+  overflow-y: hidden;
+  scrollbar-width: none;
+}
+
+.journey::-webkit-scrollbar {
+  display: none;
+}
+
+.journey__lens {
+  position: relative;
+  height: 100%;
+}
+
+.journey__world {
+  position: relative;
+  display: flex;
+  width: max-content;
+  height: var(--sh);
+}
+
+.journey__far,
+.journey__bars {
+  display: none;
+}
+
+.is-journey .next {
+  height: calc(100vh + var(--room, 1200vh));
+  height: calc(100svh + var(--room, 1200vh));
+}
+
+.is-journey .journey {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  height: 100svh;
+  overflow: hidden;
+  overflow: clip;
+}
+
+.is-journey .journey__lens {
+  position: absolute;
+  inset: 0;
+  transform-origin: 50% 50%;
+  will-change: transform;
+}
+
+.is-journey .journey__world {
+  position: absolute;
+  z-index: 2;
+  left: 0;
+  top: calc((100% - var(--sh)) / 2);
+  will-change: transform;
+}
+
+/* ---------- camadas de profundidade ---------- */
+
+.is-journey .journey__far {
+  display: block;
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  pointer-events: none;
+}
+
+.far__track {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 300vw;
+  background-image:
+    linear-gradient(to right, var(--grid) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--grid) 1px, transparent 1px);
+  background-size: 9vh 9vh;
+  will-change: transform;
+}
+
+.far__mark {
+  position: absolute;
+  left: var(--l);
+  top: var(--t);
+  width: var(--s);
+  rotate: var(--r, 0deg);
+  opacity: .07;
+  filter: grayscale(1);
+}
+
+/* ---------- cenas e peças ---------- */
+
+.scene {
+  position: relative;
+  flex: none;
+  height: 100%;
+  container-type: size;
+}
+
+.scene--about {
+  width: max(100vw, calc(var(--sh) * 1.9));
+}
+
+.scene--skills {
+  width: calc(var(--sh) * 2.15);
+}
+
+.scene--music {
+  width: calc(var(--sh) * 2.42);
+}
+
+.scene--work {
+  width: calc(var(--sh) * 2.8);
+}
+
+.scene--portal {
+  width: 100vw;
+}
+
+.scene--git {
+  width: calc(var(--sh) * 1.62);
+}
+
+.bit {
+  position: absolute;
+  margin: 0;
+  left: calc(var(--x) * 1cqh);
+  top: calc(var(--y) * 1cqh);
+  width: calc(var(--w) * 1cqh);
+  rotate: var(--r, 0deg);
+}
+
+.bit__in {
+  display: block;
+  position: relative;
+}
+
+.bit img {
+  width: 100%;
+}
+
+.doodle {
+  overflow: visible;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.doodle path {
+  vector-effect: non-scaling-stroke;
+}
+
+.p__desc {
+  font: 300 2.45cqh/1.55 var(--sans);
+  color: var(--fg-2);
+  text-wrap: pretty;
+}
+
+.p__desc--ink {
+  color: rgba(16, 16, 16, .78);
+}
+
+.p__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .6cqh 1.4cqh;
+  font: 500 1.55cqh/1 var(--cond);
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--fg-3);
+}
+
+.p__meta span + span::before {
+  content: "·";
+  margin-right: 1.4cqh;
+  color: #3936ff;
+}
+
+/* letras-recorte (bilhete de sequestro) */
+.tiles {
+  display: flex;
+  align-items: flex-end;
+  gap: 1.4cqh;
+  margin: 0;
+  font-size: 19cqh;
+  font-weight: 400;
+  line-height: 1;
+}
+
+.tile {
+  display: block;
+  position: relative;
+}
+
+.tile__face {
+  display: block;
+  position: relative;
+  padding: .12em .2em .08em;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--ff);
+  rotate: var(--tr, 0deg);
+  box-shadow: 0 .6cqh 1.4cqh rgba(0, 0, 0, .45);
+}
+
+.tile:nth-child(odd) .tile__face {
+  top: -1.2cqh;
+}
+
+/* ---------- sobre mim (fundo azul, texto preto, duas fotos) ---------- */
+
+.scene--about {
+  --ink: #0b0b0d;
+  color: var(--ink);
+}
+
+/* o azul cobre a tela inteira, inclusive acima e abaixo da cena quando a tela é mais alta que ela */
+.scene--about::before {
+  content: "";
+  position: absolute;
+  z-index: 0;
+  inset: -60vh 0;
+  background: #3936ff;
+}
+
+.about__lead {
+  z-index: 1;
+  font: 400 6.4cqh/1.04 var(--serif);
+  letter-spacing: -.02em;
+  text-wrap: balance;
+}
+
+.about__text {
+  z-index: 1;
+  font: 400 2.7cqh/1.55 var(--sans);
+  text-wrap: pretty;
+}
+
+.about__pic {
+  z-index: 1;
+}
+
+.about__frame {
+  overflow: hidden;
+  background: rgba(11, 11, 13, .2);
+}
+
+/* a foto fica levemente ampliada: é a folga para o parallax interno */
+.about__frame img {
+  display: block;
+  width: 100%;
+  height: auto;
+  transform: rotate(var(--fix, 0deg)) scale(var(--cover, 1.12));
+}
+
+.about__cap {
+  margin-top: 1.3cqh;
+  font: 500 1.5cqh/1 var(--cond);
+  letter-spacing: .22em;
+}
+
+@keyframes tick {
+  to {
+    opacity: .15;
+  }
+}
+
+/* ---------- 01 · habilidades (papel, carimbo e os cartões das linguagens) ---------- */
+
+.skills__paper {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background-color: var(--skills-paper);
+  background-image:
+    linear-gradient(rgba(16, 16, 16, .06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(16, 16, 16, .06) 1px, transparent 1px);
+  background-size: 2.6cqh 2.6cqh;
+  box-shadow: 0 0 6cqh rgba(0, 0, 0, .45);
+}
+
+.skills__title {
+  z-index: 1;
+  margin: 0;
+  font: 400 16cqh/.95 var(--serif);
+  letter-spacing: -.02em;
+  color: #121212;
+}
+
+/* o quadro ocupa a cena inteira e cada cartão se posiciona nele (--cx --cy --cr, no HTML);
+   ele mesmo não recebe o cursor, só os cartões */
+.skills__board {
+  z-index: 1;
+  height: 100cqh;
+  pointer-events: none;
+}
+
+/* a sombra fica na lista: o clip-path recortado de cada cartão engoliria a sombra dele */
+.skills__list {
+  position: relative;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  filter: drop-shadow(0 1.4cqh 1.6cqh rgba(0, 0, 0, .22));
+}
+
+.skill {
+  position: absolute;
+  left: calc(var(--cx) * 1cqh);
+  top: calc(var(--cy) * 1cqh);
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  width: 44cqh;
+  min-height: 31cqh;
+  padding: 3cqh 3.2cqh 3.2cqh;
+  background: var(--c);
+  color: var(--t);
+  clip-path: polygon(0 3%, 2% 0, 98% 1%, 100% 4%, 99% 97%, 97% 100%, 3% 99%, 0 96%);
+  rotate: var(--cr, 0deg);
+  pointer-events: auto;
+}
+
+.skill__glyph {
+  justify-self: start;
+  font: 400 7cqh/1 var(--type);
+  opacity: .85;
+  white-space: nowrap;
+  transition: transform .6s var(--ease-out), opacity .3s;
+}
+
+/* o símbolo da linguagem dá um passo para trás quando o cursor chega no cartão */
+.skill:hover .skill__glyph {
+  opacity: 1;
+  transform: translateX(-.5cqh) rotate(-7deg);
+}
+
+/* --ns encolhe um nome comprido (JavaScript) para caber no cartão */
+.skill__name {
+  align-self: end;
+  margin: 0;
+  font: 400 var(--ns, 7.4cqh)/1 var(--heavy);
+  letter-spacing: -.01em;
+}
+
+.skill__what {
+  margin: 1.2cqh 0 0;
+  font: 400 2.2cqh/1.3 var(--type);
+  opacity: .82;
+}
+
+/* ---------- 02 · música (small hours: madrugada azul, a capa e o álbum inteiro) ---------- */
+
+/* a noite cobre a tela inteira, inclusive acima e abaixo da cena;
+   o brilho azul atrás da capa é a cor do próprio álbum (#005298) */
+.music__floor {
+  --night: linear-gradient(180deg, #01040d, #041634 52%, #020a1c);
+  position: absolute;
+  inset: -60vh 0;
+  background:
+    radial-gradient(34% 30% at 49% 48%, rgba(0, 82, 152, .55), transparent 72%),
+    radial-gradient(22% 20% at 10% 62%, rgba(57, 54, 255, .16), transparent 70%),
+    var(--night);
+}
+
+/* linhas finas de monitor velho, como a textura da capa */
+.music__floor::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(0deg, rgba(154, 212, 255, .03) 0 1px, transparent 1px 3px);
+}
+
+/* a borda da direita é rasgada: a madrugada termina onde começa o quarto escuro */
+.music__floor::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 100%;
+  width: 2.6cqh;
+  background: var(--night);
+  clip-path: polygon(0 0, 55% 0, 30% 2.5%, 80% 5%, 25% 7.5%, 65% 10%, 15% 12.5%, 90% 15%, 35% 17.5%, 70% 20%, 20% 22.5%, 85% 25%, 40% 27.5%, 60% 30%, 10% 32.5%, 75% 35%, 30% 37.5%, 95% 40%, 25% 42.5%, 65% 45%, 15% 47.5%, 80% 50%, 35% 52.5%, 70% 55%, 20% 57.5%, 90% 60%, 30% 62.5%, 60% 65%, 10% 67.5%, 85% 70%, 40% 72.5%, 75% 75%, 20% 77.5%, 95% 80%, 30% 82.5%, 65% 85%, 15% 87.5%, 80% 90%, 35% 92.5%, 70% 95%, 25% 97.5%, 50% 100%, 0 100%);
+}
+
+.music__title {
+  z-index: 3;
+}
+
+.music__desc {
+  z-index: 3;
+  color: rgba(214, 228, 255, .82);
+}
+
+.music__more {
+  z-index: 3;
+}
+
+/* a capa: acende como luz de rua quando a câmera chega; o reflexo corre com o scroll */
+.music__album {
+  z-index: 5;
+}
+
+.album__halo {
+  position: absolute;
+  z-index: -1;
+  inset: -22%;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, rgba(40, 110, 255, .5), rgba(0, 82, 152, .28) 55%, transparent);
+  pointer-events: none;
+}
+
+.album {
+  appearance: none;
+  position: relative;
+  display: block;
+  width: 100%;
+  aspect-ratio: 1;
+  padding: 0;
+  border: 0;
+  background: #020716;
+  box-shadow: 0 3cqh 6cqh rgba(0, 0, 0, .55), 0 0 0 .15cqh rgba(154, 212, 255, .12);
+  cursor: pointer;
+}
+
+.album:focus-visible {
+  outline: .5cqh solid #9ad4ff;
+  outline-offset: .8cqh;
+}
+
+.album__art {
+  display: block;
+  height: 100%;
+  object-fit: cover;
+}
+
+.album__sheen {
+  --sx: 70%;
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(115deg, transparent 38%, rgba(214, 228, 255, .16) 48%, rgba(214, 228, 255, .05) 54%, transparent 62%) var(--sx) 0 / 260% 100% no-repeat;
+  mix-blend-mode: screen;
+  pointer-events: none;
+}
+
+/* iPod: preto, com a roda vermelha (como o iPod U2 — e o vermelho do aro da placa na capa),
+   aro cromado e tela do iPod classic. dentro do aparelho tudo é medido pela largura dele
+   (cqw do container .music__ipod). a lógica fica em ipod.js */
+.music__ipod {
+  rotate: 5deg;
+  z-index: 12;
+  container-type: inline-size;
+}
+
+.ipod {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  aspect-ratio: 60 / 100;
+  padding: 6.5cqw 7cqw 8cqw;
+  border-radius: 9cqw;
+  background:
+    radial-gradient(120% 50% at 20% 0%, rgba(255, 255, 255, .14), transparent 60%),
+    linear-gradient(160deg, #2a2b31 0%, #121317 48%, #060709 100%);
+  box-shadow:
+    inset 0 0 0 .45cqw rgba(255, 255, 255, .08),
+    inset .9cqw 0 1.8cqw rgba(120, 150, 255, .14),
+    0 0 0 .6cqw #c9ccd2,
+    0 0 0 1cqw #8d929b,
+    0 5cqw 9cqw rgba(0, 0, 0, .6),
+    0 1.5cqw 2.5cqw rgba(0, 0, 0, .35);
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+/* reflexo de vitrine no plástico preto */
+.ipod::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(125deg, rgba(255, 255, 255, .09) 0 24%, transparent 24.5%);
+  pointer-events: none;
+}
+
+.ipod button:focus-visible,
+.ipod__ring:focus-visible {
+  outline: .6cqw solid #9ad4ff;
+  outline-offset: .5cqw;
+}
+
+/* tela: o brilho vem de --lit (0 = apagada), animado quando o aparelho chega */
+.ipod__screen {
+  --lit: 1;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: calc(100% - 3.4cqw);
+  aspect-ratio: 4 / 3;
+  margin: 1.7cqw 0;
+  overflow: hidden;
+  border-radius: 2cqw;
+  background: #fff;
+  box-shadow: 0 0 0 1.4cqw #050507, 0 0 0 1.7cqw #3a3d44;
+  filter: brightness(calc(.15 + var(--lit) * .85));
+}
+
+/* reflexo do vidro */
+.ipod__screen::after {
+  content: "";
+  position: absolute;
+  z-index: 3;
+  inset: 0;
+  background: linear-gradient(118deg, rgba(255, 255, 255, .42) 0 34%, transparent 34.5%);
+  opacity: .3;
+  pointer-events: none;
+}
+
+.ipod__bar {
+  display: grid;
+  flex: none;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  height: 9cqw;
+  padding: 0 3.2cqw;
+  border-bottom: .3cqw solid #a9b1ba;
+  background: linear-gradient(180deg, #fdfdfe, #cfd5dc);
+  color: #1c1d20;
+  font: 600 3.6cqw/1 var(--sans);
+}
+
+.ipod__head {
+  max-width: 52cqw;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ipod__state {
+  display: flex;
+  justify-self: start;
+}
+
+.ipod:not(.has-track) .ipod__state {
+  visibility: hidden;
+}
+
+.ipod__icon {
+  width: 3cqw;
+  height: 3cqw;
+  fill: #2a62e8;
+}
+
+.ipod__icon--play,
+.ipod.is-playing .ipod__icon--pause {
+  display: none;
+}
+
+.ipod.is-playing .ipod__icon--play {
+  display: block;
+}
+
+.ipod__battery {
+  position: relative;
+  justify-self: end;
+  width: 6.6cqw;
+  height: 3.3cqw;
+  padding: .35cqw;
+  border: .35cqw solid #2a2c30;
+  border-radius: .6cqw;
+}
+
+.ipod__battery::after {
+  content: "";
+  position: absolute;
+  right: -1.1cqw;
+  top: 30%;
+  width: .7cqw;
+  height: 40%;
+  border-radius: 0 .3cqw .3cqw 0;
+  background: #2a2c30;
+}
+
+.ipod__battery i {
+  display: block;
+  width: 80%;
+  height: 100%;
+  border-radius: .2cqw;
+  background: linear-gradient(#7fb2ff, #2a62e8);
+}
+
+/* as telas ficam empilhadas e deslizam de lado na troca (ipod.js) */
+.ipod__views {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.ipod__view {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  background: #fff;
+}
+
+.ipod__view[hidden] {
+  display: none;
+}
+
+/* listas do iPod: a linha escolhida em azul */
+.ipod__list {
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  list-style: none;
+  color: #16171b;
+  font: 600 3.9cqw/1 var(--sans);
+}
+
+.ipod__list li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2cqw;
+  height: 9cqw;
+  padding: 0 2.8cqw 0 3.2cqw;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.ipod__list li.is-on {
+  background: linear-gradient(180deg, #5b9dff, #2a62e8);
+  color: #fff;
+}
+
+.ipod__list li :is(span, small) {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.ipod__list small {
+  flex: none;
+  color: #8a9099;
+  font: 500 3cqw/1 var(--sans);
+}
+
+.ipod__list li.is-on small {
+  color: #fff;
+}
+
+/* menu principal: a lista na metade da esquerda e a capa passeando na da direita,
+   como no iPod classic */
+.ipod__menu .ipod__list {
+  position: relative;
+  z-index: 1;
+  width: 56%;
+  height: 100%;
+  background: #fff;
+  box-shadow: .6cqw 0 1.6cqw rgba(0, 0, 0, .22);
+}
+
+.ipod__menu li::after {
+  content: "›";
+  color: #9aa0a8;
+  font-size: 5cqw;
+  line-height: .5;
+}
+
+.ipod__menu li.is-on::after {
+  color: #fff;
+}
+
+.menu__art {
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 46% !important;
+  height: 100%;
+  object-fit: cover;
+  animation: ken-burns 16s ease-in-out infinite alternate;
+}
+
+@keyframes ken-burns {
+  from {
+    object-position: 30% 40%;
+    scale: 1.1;
+  }
+
+  to {
+    object-position: 70% 65%;
+    scale: 1.3;
+  }
+}
+
+.ipod__list--tracks {
+  overflow-y: auto;
+  scrollbar-width: none;
+}
+
+.ipod__list--tracks li {
+  height: 7.4cqw;
+  font-size: 3.5cqw;
+}
+
+/* tocando agora */
+.ipod__now {
+  display: flex;
+  flex-direction: column;
+  gap: 1.8cqw;
+  padding: 3cqw 3.4cqw 2.6cqw;
+  color: #16171b;
+}
+
+.now__top {
+  display: flex;
+  align-items: center;
+  gap: 3cqw;
+}
+
+.now__art {
+  flex: none;
+  width: 28cqw !important;
+  aspect-ratio: 1;
+  object-fit: cover;
+  box-shadow: 0 1cqw 2cqw rgba(0, 0, 0, .3);
+  -webkit-box-reflect: below .3cqw linear-gradient(transparent 72%, rgba(255, 255, 255, .22));
+}
+
+.now__info {
+  min-width: 0;
+}
+
+.now__info p {
+  margin: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.now__count {
+  margin-bottom: 1cqw !important;
+  color: #8a9099;
+  font: 500 2.8cqw/1.2 var(--sans);
+}
+
+.now__title {
+  font: 700 4.4cqw/1.2 var(--sans);
+}
+
+.now__artist {
+  font: 500 3.4cqw/1.35 var(--sans);
+}
+
+.now__album {
+  color: #6b7280;
+  font: 400 3.2cqw/1.35 var(--sans);
+}
+
+/* o visualizador: barras que ouvem o áudio de verdade (ipod.js) */
+.now__viz {
+  display: flex;
+  flex: none;
+  align-items: flex-end;
+  gap: .8cqw;
+  height: 7cqw;
+  margin-top: auto;
+}
+
+.now__viz i {
+  flex: 1;
+  height: 100%;
+  border-radius: .4cqw .4cqw 0 0;
+  background: linear-gradient(0deg, #2a62e8, #5b9dff 60%, #e23a48);
+  transform: scaleY(.06);
+  transform-origin: 50% 100%;
+}
+
+.now__bar {
+  flex: none;
+  height: 1.8cqw;
+  overflow: hidden;
+  border-radius: 1cqw;
+  background: #d9dde3;
+  box-shadow: inset 0 .2cqw .4cqw rgba(0, 0, 0, .15);
+}
+
+.now__bar i {
+  display: block;
+  height: 100%;
+  background: linear-gradient(180deg, #7fb2ff, #2a62e8);
+  transform: scaleX(0);
+  transform-origin: 0 50%;
+}
+
+.now__time {
+  display: flex;
+  justify-content: space-between;
+  margin: 0;
+  color: #6b7280;
+  font: 500 2.7cqw/1 var(--sans);
+}
+
+.now__tag {
+  color: #e23a48;
+  font-size: 2.3cqw;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+
+/* roda vermelha: gira arrastando em volta dela (ipod.js); o centro escolhe, "menu" volta */
+.ipod__wheel {
+  position: relative;
+  width: 78cqw;
+  aspect-ratio: 1;
+  margin-top: auto;
+  touch-action: none;
+}
+
+.ipod__ring {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: radial-gradient(circle at 50% 28%, #f0505c, #d22a38 55%, #a8182a);
+  box-shadow:
+    inset 0 .6cqw 1cqw rgba(255, 255, 255, .25),
+    inset 0 -1.2cqw 2cqw rgba(0, 0, 0, .35),
+    0 0 0 .3cqw rgba(0, 0, 0, .4);
+  cursor: grab;
+}
+
+.ipod.is-turning .ipod__ring {
+  cursor: grabbing;
+}
+
+.ipod__key {
+  appearance: none;
+  position: absolute;
+  display: grid;
+  place-items: center;
+  width: 20cqw;
+  height: 12cqw;
+  padding: 0;
+  border: 0;
+  border-radius: 3cqw;
+  background: none;
+  color: rgba(40, 6, 12, .72);
+  font: 700 4.2cqw/1 var(--sans);
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: color .2s;
+}
+
+.ipod__key svg {
+  width: 8cqw;
+  height: 4cqw;
+  fill: currentColor;
+}
+
+.ipod__key:is(:hover, :focus-visible, :active) {
+  color: #fff;
+}
+
+.ipod__key--menu {
+  left: 50%;
+  top: 3cqw;
+  translate: -50% 0;
+}
+
+.ipod__key--play {
+  left: 50%;
+  bottom: 3cqw;
+  translate: -50% 0;
+}
+
+.ipod__key--next {
+  right: 1cqw;
+  top: 50%;
+  translate: 0 -50%;
+}
+
+.ipod__key--prev {
+  left: 1cqw;
+  top: 50%;
+  translate: 0 -50%;
+}
+
+.ipod__center {
+  appearance: none;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 36%;
+  aspect-ratio: 1;
+  translate: -50% -50%;
+  border: 0;
+  border-radius: 50%;
+  background: radial-gradient(circle at 50% 30%, #3a3c44, #15161a 70%);
+  box-shadow:
+    0 .4cqw .8cqw rgba(0, 0, 0, .45),
+    inset 0 .3cqw .5cqw rgba(255, 255, 255, .12);
+  cursor: pointer;
+  transition: scale .12s, box-shadow .12s;
+}
+
+.ipod__center:active {
+  scale: .96;
+  box-shadow: inset 0 .6cqw 1.2cqw rgba(0, 0, 0, .5);
+}
+
+/* ---------- 03 · projetos (quarto escuro) ---------- */
+
+.work__safelight {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(40% 55% at 28% 45%, rgba(190, 24, 32, .24), transparent 70%),
+    radial-gradient(34% 50% at 70% 55%, rgba(150, 16, 24, .2), transparent 70%);
+  pointer-events: none;
+}
+
+.work__title {
+  z-index: 3;
+  margin: 0;
+  font: 400 17cqh/1 var(--serif);
+  letter-spacing: -.02em;
+  white-space: nowrap;
+}
+
+.work__ghost {
+  color: transparent;
+  -webkit-text-stroke: .14cqh var(--fg-3);
+}
+
+.work__fill {
+  position: absolute;
+  left: 0;
+  top: 0;
+  color: var(--work-fill);
+  text-shadow: 0 0 4cqh var(--work-glow);
+}
+
+.work__beam {
+  position: absolute;
+  top: -20%;
+  bottom: -20%;
+  left: 0;
+  width: 6cqh;
+  margin-left: -3cqh;
+  background: linear-gradient(90deg, transparent, rgba(255, 222, 170, .85), transparent);
+  mix-blend-mode: screen;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.work__more {
+  z-index: 2;
+}
+
+.work__feature {
+  z-index: 2;
+}
+
+/* cópia fotográfica = card de projeto (um botão que abre o modal) */
+.project {
+  appearance: none;
+  display: block;
+  width: 100%;
+  border: 0;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.print {
+  padding: 2.2cqh 2.2cqh 8.6cqh;
+  background: #f4f1ea;
+  box-shadow: 0 3cqh 5cqh rgba(0, 0, 0, .6);
+}
+
+.print__frame {
+  position: relative;
+  display: block;
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+}
+
+/* espaço reservado para a imagem do projeto — troque por um <img> */
+.project__img {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  background:
+    repeating-linear-gradient(45deg, rgba(243, 241, 236, .06) 0 1px, transparent 1px 1.6cqh),
+    radial-gradient(circle at 30% 30%, #3a2a2a, #120d0d 70%);
+  color: rgba(243, 241, 236, .7);
+  font: 400 1.7cqh/1.2 var(--type);
+  text-align: center;
+}
+
+.project__img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.print__fog {
+  position: absolute;
+  inset: 0;
+  background: #fffaf0;
+  opacity: 0;
+}
+
+.print__cap {
+  position: absolute;
+  left: 2.4cqh;
+  bottom: 4.6cqh;
+  font: 400 1.9cqh/1 var(--type);
+  color: #333;
+}
+
+.project__more {
+  position: absolute;
+  left: 2.4cqh;
+  bottom: 2cqh;
+  font: 500 1.35cqh/1 var(--cond);
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: #3936ff;
+}
+
+.work__line {
+  z-index: 2;
+  height: 56cqh;
+}
+
+.line__string {
+  display: block;
+  width: 100%;
+  height: 6cqh;
+  overflow: visible;
+}
+
+.line__string path {
+  fill: none;
+  stroke: var(--fg-3);
+  stroke-width: 1.4;
+  vector-effect: non-scaling-stroke;
+}
+
+.swing {
+  position: absolute;
+  left: var(--sx);
+  top: var(--sy);
+  width: 28cqh;
+  margin-left: -14cqh;
+  rotate: var(--sr, 0deg);
+}
+
+.swing__body {
+  display: block;
+  transform-origin: 50% 0;
+}
+
+.swing__pin {
+  position: relative;
+  z-index: 2;
+  display: block;
+  width: 1.8cqh;
+  height: 4.6cqh;
+  margin: -1.8cqh auto -1.6cqh;
+  border-radius: .3cqh;
+  background: linear-gradient(90deg, #a8793f, #d9b07a 50%, #a8793f);
+}
+
+.swing__print {
+  position: relative;
+  padding: 1.4cqh 1.4cqh 5.4cqh;
+  background: #f4f1ea;
+  box-shadow: 0 1.6cqh 2.4cqh rgba(0, 0, 0, .5);
+}
+
+.swing__print .project__img {
+  position: relative;
+  aspect-ratio: 4 / 5;
+}
+
+.swing__cap {
+  position: absolute;
+  left: 1.6cqh;
+  right: 1.6cqh;
+  bottom: 1.8cqh;
+  font: 400 1.6cqh/1.2 var(--type);
+  color: #333;
+}
+
+/* ---------- a foto-transição ---------- */
+
+.scene--portal {
+  z-index: 0;
+}
+
+.portal {
+  position: absolute;
+  left: 0;
+  top: calc((var(--sh) - 100vh) / 2);
+  top: calc((var(--sh) - 100svh) / 2);
+  width: 100vw;
+  height: 100vh;
+  height: 100svh;
+  overflow: hidden;
+  background: #000;
+}
+
+.portal__img {
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 35%;
+}
+
+/* a foto se apaga na cor do papel: no tema claro o texto escuro do github continua legível por cima */
+.portal__shade {
+  position: absolute;
+  inset: 0;
+  background: var(--sheet);
+  opacity: 0;
+}
+
+/* ---------- 04 · github (bastidores, em cinema) ---------- */
+
+.scene--git {
+  z-index: 1;
+}
+
+.git__title {
+  z-index: 2;
+  margin: 0;
+  font: 700 19cqh/.86 var(--cond);
+  letter-spacing: -.005em;
+  text-transform: uppercase;
+  color: var(--fg);
+}
+
+.slit {
+  position: relative;
+  display: inline-block;
+}
+
+.slit__top {
+  display: block;
+  clip-path: inset(-10% 0 50% 0);
+}
+
+.slit__bot {
+  position: absolute;
+  left: 0;
+  top: 0;
+  clip-path: inset(50% 0 -10% 0);
+}
+
+.git__cta {
+  z-index: 3;
+}
+
+.git__link {
+  display: inline-grid;
+  gap: .6em;
+  font-size: 2cqh;
+}
+
+.git__link small {
+  font: 400 .72em/1.2 var(--type);
+  letter-spacing: 0;
+  text-transform: none;
+  opacity: .8;
+}
+
+.git__term {
+  z-index: 1;
+}
+
+.term {
+  overflow: hidden;
+  border-radius: .8cqh;
+  background: #0c0c0e;
+  box-shadow: 0 3cqh 6cqh rgba(0, 0, 0, .6), inset 0 0 0 .2cqh rgba(243, 241, 236, .08);
+}
+
+.term__bar {
+  display: flex;
+  align-items: center;
+  gap: .8cqh;
+  padding: 1.2cqh 1.6cqh;
+  background: #18181c;
+}
+
+.term__bar i {
+  width: 1.2cqh;
+  height: 1.2cqh;
+  border-radius: 50%;
+  background: #ff5f57;
+}
+
+.term__bar i:nth-child(2) {
+  background: #febc2e;
+}
+
+.term__bar i:nth-child(3) {
+  background: #28c840;
+}
+
+.term__bar span {
+  margin-left: auto;
+  font: 400 1.3cqh/1 var(--type);
+  color: rgba(243, 241, 236, .5);
+}
+
+.term__body {
+  min-height: 26cqh;
+  margin: 0;
+  padding: 2cqh 2.2cqh;
+  font: 400 1.8cqh/1.7 var(--type);
+  color: #cfe8c9;
+  white-space: pre-wrap;
+  word-break: break-all;
+}
+
+.term__caret {
+  color: #f2d027;
+  animation: tick 1s steps(2, jump-none) infinite;
+}
+
+.term__cap {
+  margin-top: 1.2cqh;
+  font: 500 1.5cqh/1 var(--cond);
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: var(--fg-3);
+}
+
+/* ---------- camadas de cinema e HUD ---------- */
+
+.is-journey .journey__bars {
+  display: block;
+  position: absolute;
+  z-index: 5;
+  inset: 0;
+  pointer-events: none;
+}
+
+.bar {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 11%;
+  background: #000;
+  transform: scaleY(0);
+}
+
+.bar--top {
+  top: 0;
+  transform-origin: 50% 0;
+}
+
+.bar--bottom {
+  bottom: 0;
+  transform-origin: 50% 100%;
+}
+
+/* ---------- telas em pé (celular e tablet na vertical) ---------- */
+
+@media (max-aspect-ratio: 1/1) {
+  .bit {
+    left: calc(var(--px, var(--x)) * 1cqh);
+    top: calc(var(--py, var(--y)) * 1cqh);
+    width: calc(var(--pw, var(--w)) * 1cqh);
+    rotate: var(--pr, var(--r, 0deg));
+  }
+
+  .scene--about {
+    width: max(100vw, calc(var(--sh) * 1.62));
+  }
+
+  .about__lead {
+    font-size: 5cqh;
+    line-height: 1.06;
+  }
+
+  .about__text {
+    font-size: 3cqh;
+    line-height: 1.6;
+  }
+
+  .about__cap {
+    font-size: 1.9cqh;
+  }
+
+  .scene--music {
+    width: calc(var(--sh) * 2.02);
+  }
+
+  .music__title {
+    font-size: 11.5cqh;
+    gap: 1cqh;
+  }
+
+  .music__desc {
+    font-size: 2.9cqh;
+  }
+
+  .git__title {
+    font-size: 15cqh;
+  }
+
+  .work__title {
+    font-size: 12cqh;
+  }
+
+  .skills__title {
+    font-size: 10.5cqh;
+  }
+}
+
+/* ---------- movimento reduzido ---------- */
+
+@media (prefers-reduced-motion: reduce) {
+  .menu__art {
+    animation: none;
+  }
+}
